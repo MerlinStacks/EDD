@@ -4,6 +4,11 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.14] - 2024-03-18
+### Fixed
+- PHP Fatal error due to undefined constant ED_DATES_CK_URL in admin class
+- Updated constant name to ED_DATES_CK_PLUGIN_URL for consistency
+
 ## [1.0.13] - 2024-03-18
 ### Added
 - New step-by-step shipping methods configuration interface

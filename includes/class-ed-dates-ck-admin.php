@@ -756,14 +756,14 @@ class ED_Dates_CK_Admin {
 
             wp_enqueue_style(
                 'ed-dates-ck-admin',
-                ED_DATES_CK_URL . 'assets/css/admin.css',
+                ED_DATES_CK_PLUGIN_URL . 'assets/css/admin.css',
                 array('jquery-ui-datepicker'),
                 ED_DATES_CK_VERSION
             );
 
             wp_enqueue_script(
                 'ed-dates-ck-admin',
-                ED_DATES_CK_URL . 'assets/js/admin.js',
+                ED_DATES_CK_PLUGIN_URL . 'assets/js/admin.js',
                 array('jquery', 'jquery-ui-datepicker', 'jquery-ui-tooltip'),
                 ED_DATES_CK_VERSION,
                 true
