@@ -1,0 +1,33 @@
+.ed-dates-ck-block {
+    padding: 20px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 1em 0;
+}
+
+.ed-dates-ck-block h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    color: #1e1e1e;
+}
+
+.ed-dates-ck-block p {
+    margin: 0 0 5px 0;
+    color: #757575;
+}
+
+.ed-dates-ck-block em {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.ed-dates-ck-block-warning {
+    background: #fff8e5;
+    border-color: #f0b849;
+}
+
+.ed-dates-ck-block-warning p {
+    color: #996017;
+    margin: 0;
+} 

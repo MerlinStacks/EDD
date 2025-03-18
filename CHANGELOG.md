@@ -4,6 +4,38 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2024-03-18
+### Changed
+- Improved holiday date picker to support true multiple date selection
+- Enhanced admin settings tabs to load content instantly
+- Updated block editor integration with better preview and warnings
+
+### Fixed
+- Holiday date picker not allowing multiple date selection
+- Admin settings tabs causing unnecessary page reloads
+- Block editor integration and visibility issues
+
+## [1.0.5] - 2024-03-18
+### Added
+- Calendar picker for shop and postage holidays
+- Grid layout for shipping methods settings
+- Improved admin interface with tabbed navigation
+
+### Changed
+- Moved shipping methods to a separate settings tab
+- Enhanced holiday date selection with jQuery UI Datepicker
+- Improved block editor integration and preview
+
+### Fixed
+- Block not appearing in the WordPress editor
+- Holiday date selection buttons not working
+- Admin interface layout and styling issues
+
+## [1.0.4] - 2024-03-18
+### Fixed
+- Admin menu not appearing in WordPress dashboard
+- Added proper initialization of admin and product classes
+
 ## [1.0.3] - 2024-03-18
 ### Fixed
 - Missing class files causing fatal error

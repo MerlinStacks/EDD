@@ -3,7 +3,7 @@
  * Plugin Name: ED Dates CK
  * Plugin URI: https://customkings.com.au
  * Description: A WooCommerce plugin that displays estimated delivery dates on product, cart, and checkout pages.
- * Version: 1.0.2
+ * Version: 1.0.6
  * Author: CustomKings Personalised Gifts
  * Author URI: https://customkings.com.au
  * Text Domain: ed-dates-ck
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ED_DATES_CK_VERSION', '1.0.2');
+define('ED_DATES_CK_VERSION', '1.0.6');
 define('ED_DATES_CK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('ED_DATES_CK_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -53,18 +53,28 @@ function ed_dates_ck_woocommerce_missing_notice() {
  * Register blocks
  */
 function ed_dates_ck_register_blocks() {
-    // Automatically load dependencies and version
-    $asset_file = include(ED_DATES_CK_PLUGIN_DIR . 'blocks/build/index.asset.php');
+    if (!function_exists('register_block_type')) {
+        return;
+    }
 
+    // Register the script
     wp_register_script(
         'ed-dates-ck-blocks-editor',
         ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.js',
-        $asset_file['dependencies'],
-        $asset_file['version']
+        array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n', 'wp-data'),
+        ED_DATES_CK_VERSION
     );
 
-    register_block_type(ED_DATES_CK_PLUGIN_DIR . 'blocks/build', array(
-        'render_callback' => 'ed_dates_ck_render_delivery_block'
+    // Register the block
+    register_block_type('ed-dates-ck/estimated-delivery', array(
+        'editor_script' => 'ed-dates-ck-blocks-editor',
+        'render_callback' => 'ed_dates_ck_render_delivery_block',
+        'attributes' => array(
+            'className' => array(
+                'type' => 'string',
+                'default' => ''
+            )
+        )
     ));
 }
 add_action('init', 'ed_dates_ck_register_blocks');
@@ -102,6 +112,14 @@ require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-calculator.php
 function ed_dates_ck_init() {
     // Initialize main plugin class
     ED_Dates_CK::get_instance();
+    
+    // Initialize admin class if in admin area
+    if (is_admin()) {
+        ED_Dates_CK_Admin::get_instance();
+    }
+
+    // Initialize product class
+    ED_Dates_CK_Product::get_instance();
 }
 add_action('plugins_loaded', 'ed_dates_ck_init');
 

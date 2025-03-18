@@ -8,6 +8,7 @@ class ED_Dates_CK_Admin {
      * @var ED_Dates_CK_Admin The single instance of the class
      */
     protected static $_instance = null;
+    private $active_tab = 'general';
 
     /**
      * Main ED_Dates_CK_Admin Instance
@@ -136,7 +137,7 @@ class ED_Dates_CK_Admin {
             return;
         }
 
-        // Get shipping methods
+        $this->active_tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'general';
         $shipping_methods = $this->get_all_shipping_methods();
         $saved_methods = get_option('ed_dates_ck_shipping_methods', array());
         $shop_closed_days = get_option('ed_dates_ck_shop_closed_days', array('sunday'));
@@ -146,128 +147,179 @@ class ED_Dates_CK_Admin {
         ?>
         <div class="wrap">
             <h1><?php echo esc_html__('EDDates CK Settings', 'ed-dates-ck'); ?></h1>
+            
+            <div class="nav-tab-wrapper">
+                <a href="#general" 
+                   class="nav-tab <?php echo $this->active_tab === 'general' ? 'nav-tab-active' : ''; ?>"
+                   data-tab="general">
+                    <?php esc_html_e('General Settings', 'ed-dates-ck'); ?>
+                </a>
+                <a href="#shipping" 
+                   class="nav-tab <?php echo $this->active_tab === 'shipping' ? 'nav-tab-active' : ''; ?>"
+                   data-tab="shipping">
+                    <?php esc_html_e('Shipping Methods', 'ed-dates-ck'); ?>
+                </a>
+            </div>
+
             <form method="post" action="options.php">
                 <?php settings_fields('ed_dates_ck_settings'); ?>
 
-                <h2><?php echo esc_html__('General Settings', 'ed-dates-ck'); ?></h2>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><?php echo esc_html__('Order Cut-off Time', 'ed-dates-ck'); ?></th>
-                        <td>
-                            <input type="time" name="ed_dates_ck_order_cutoff_time" 
-                                   value="<?php echo esc_attr($order_cutoff_time); ?>">
-                        </td>
-                    </tr>
-                </table>
+                <div id="general" class="ed-dates-ck-tab-content" <?php echo $this->active_tab !== 'general' ? 'style="display:none;"' : ''; ?>>
+                    <div class="ed-dates-ck-settings-section">
+                        <h3><?php echo esc_html__('General Settings', 'ed-dates-ck'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php echo esc_html__('Order Cut-off Time', 'ed-dates-ck'); ?></th>
+                                <td>
+                                    <input type="time" name="ed_dates_ck_order_cutoff_time" 
+                                           value="<?php echo esc_attr($order_cutoff_time); ?>">
+                                </td>
+                            </tr>
+                        </table>
 
-                <h2><?php echo esc_html__('Shop Closed Days', 'ed-dates-ck'); ?></h2>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><?php echo esc_html__('Select Days', 'ed-dates-ck'); ?></th>
-                        <td>
+                        <h3><?php echo esc_html__('Shop Closed Days', 'ed-dates-ck'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php echo esc_html__('Select Days', 'ed-dates-ck'); ?></th>
+                                <td>
+                                    <?php
+                                    $days = array(
+                                        'monday' => __('Monday', 'ed-dates-ck'),
+                                        'tuesday' => __('Tuesday', 'ed-dates-ck'),
+                                        'wednesday' => __('Wednesday', 'ed-dates-ck'),
+                                        'thursday' => __('Thursday', 'ed-dates-ck'),
+                                        'friday' => __('Friday', 'ed-dates-ck'),
+                                        'saturday' => __('Saturday', 'ed-dates-ck'),
+                                        'sunday' => __('Sunday', 'ed-dates-ck')
+                                    );
+                                    foreach ($days as $day => $label) {
+                                        ?>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="ed_dates_ck_shop_closed_days[]" 
+                                                   value="<?php echo esc_attr($day); ?>"
+                                                   <?php checked(in_array($day, $shop_closed_days)); ?>>
+                                            <?php echo esc_html($label); ?>
+                                        </label>
+                                        <?php
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h3><?php echo esc_html__('Holidays', 'ed-dates-ck'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php echo esc_html__('Shop Holidays', 'ed-dates-ck'); ?></th>
+                                <td>
+                                    <div class="holiday-picker">
+                                        <input type="text" class="holiday-datepicker" id="shop-holidays-picker" 
+                                               placeholder="<?php esc_attr_e('Select holiday dates', 'ed-dates-ck'); ?>">
+                                        <div id="shop-holidays-container" class="holiday-dates">
+                                            <?php
+                                            foreach ($shop_holidays as $holiday) {
+                                                ?>
+                                                <div class="holiday-date">
+                                                    <input type="hidden" name="ed_dates_ck_shop_holidays[]" value="<?php echo esc_attr($holiday); ?>">
+                                                    <span><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($holiday))); ?></span>
+                                                    <button type="button" class="remove-date">&times;</button>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php echo esc_html__('Postage Holidays', 'ed-dates-ck'); ?></th>
+                                <td>
+                                    <div class="holiday-picker">
+                                        <input type="text" class="holiday-datepicker" id="postage-holidays-picker" 
+                                               placeholder="<?php esc_attr_e('Select postage holiday dates', 'ed-dates-ck'); ?>">
+                                        <div id="postage-holidays-container" class="holiday-dates">
+                                            <?php
+                                            foreach ($postage_holidays as $holiday) {
+                                                ?>
+                                                <div class="holiday-date">
+                                                    <input type="hidden" name="ed_dates_ck_postage_holidays[]" value="<?php echo esc_attr($holiday); ?>">
+                                                    <span><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($holiday))); ?></span>
+                                                    <button type="button" class="remove-date">&times;</button>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="shipping" class="ed-dates-ck-tab-content" <?php echo $this->active_tab !== 'shipping' ? 'style="display:none;"' : ''; ?>>
+                    <div class="ed-dates-ck-settings-section">
+                        <h3><?php echo esc_html__('Shipping Methods', 'ed-dates-ck'); ?></h3>
+                        <div class="shipping-methods-grid">
                             <?php
-                            $days = array(
-                                'monday' => __('Monday', 'ed-dates-ck'),
-                                'tuesday' => __('Tuesday', 'ed-dates-ck'),
-                                'wednesday' => __('Wednesday', 'ed-dates-ck'),
-                                'thursday' => __('Thursday', 'ed-dates-ck'),
-                                'friday' => __('Friday', 'ed-dates-ck'),
-                                'saturday' => __('Saturday', 'ed-dates-ck'),
-                                'sunday' => __('Sunday', 'ed-dates-ck')
-                            );
-                            foreach ($days as $day => $label) {
+                            foreach ($shipping_methods as $method_id => $method_data) {
+                                $method_settings = isset($saved_methods[$method_id]) ? $saved_methods[$method_id] : array(
+                                    'min_days' => 1,
+                                    'max_days' => 3
+                                );
                                 ?>
-                                <label>
-                                    <input type="checkbox" name="ed_dates_ck_shop_closed_days[]" 
-                                           value="<?php echo esc_attr($day); ?>"
-                                           <?php checked(in_array($day, $shop_closed_days)); ?>>
-                                    <?php echo esc_html($label); ?>
-                                </label><br>
+                                <div class="shipping-method-card">
+                                    <h4><?php echo esc_html($method_data['title']); ?></h4>
+                                    <div class="method-settings">
+                                        <div class="setting-group">
+                                            <label><?php esc_html_e('Minimum Days', 'ed-dates-ck'); ?></label>
+                                            <input type="number" 
+                                                   name="ed_dates_ck_shipping_methods[<?php echo esc_attr($method_id); ?>][min_days]" 
+                                                   value="<?php echo esc_attr($method_settings['min_days']); ?>" 
+                                                   min="0" step="1">
+                                        </div>
+                                        <div class="setting-group">
+                                            <label><?php esc_html_e('Maximum Days', 'ed-dates-ck'); ?></label>
+                                            <input type="number" 
+                                                   name="ed_dates_ck_shipping_methods[<?php echo esc_attr($method_id); ?>][max_days]" 
+                                                   value="<?php echo esc_attr($method_settings['max_days']); ?>" 
+                                                   min="0" step="1">
+                                        </div>
+                                    </div>
+                                </div>
                                 <?php
                             }
                             ?>
-                        </td>
-                    </tr>
-                </table>
-
-                <h2><?php echo esc_html__('Holidays', 'ed-dates-ck'); ?></h2>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><?php echo esc_html__('Shop Holidays', 'ed-dates-ck'); ?></th>
-                        <td>
-                            <div id="shop-holidays-container">
-                                <?php
-                                foreach ($shop_holidays as $holiday) {
-                                    ?>
-                                    <div class="holiday-row">
-                                        <input type="date" name="ed_dates_ck_shop_holidays[]" 
-                                               value="<?php echo esc_attr($holiday); ?>">
-                                        <button type="button" class="button remove-holiday"><?php echo esc_html__('Remove', 'ed-dates-ck'); ?></button>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                            <button type="button" class="button" id="add-shop-holiday">
-                                <?php echo esc_html__('Add Shop Holiday', 'ed-dates-ck'); ?>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><?php echo esc_html__('Postage Holidays', 'ed-dates-ck'); ?></th>
-                        <td>
-                            <div id="postage-holidays-container">
-                                <?php
-                                foreach ($postage_holidays as $holiday) {
-                                    ?>
-                                    <div class="holiday-row">
-                                        <input type="date" name="ed_dates_ck_postage_holidays[]" 
-                                               value="<?php echo esc_attr($holiday); ?>">
-                                        <button type="button" class="button remove-holiday"><?php echo esc_html__('Remove', 'ed-dates-ck'); ?></button>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                            <button type="button" class="button" id="add-postage-holiday">
-                                <?php echo esc_html__('Add Postage Holiday', 'ed-dates-ck'); ?>
-                            </button>
-                        </td>
-                    </tr>
-                </table>
-
-                <h2><?php echo esc_html__('Shipping Methods', 'ed-dates-ck'); ?></h2>
-                <table class="form-table">
-                    <?php
-                    foreach ($shipping_methods as $method_id => $method_data) {
-                        $method_settings = isset($saved_methods[$method_id]) ? $saved_methods[$method_id] : array(
-                            'min_days' => 1,
-                            'max_days' => 3
-                        );
-                        ?>
-                        <tr>
-                            <th scope="row"><?php echo esc_html($method_data['title']); ?></th>
-                            <td>
-                                <label>
-                                    <?php echo esc_html__('Minimum Days:', 'ed-dates-ck'); ?>
-                                    <input type="number" name="ed_dates_ck_shipping_methods[<?php echo esc_attr($method_id); ?>][min_days]"
-                                           value="<?php echo esc_attr($method_settings['min_days']); ?>" min="0">
-                                </label>
-                                <label>
-                                    <?php echo esc_html__('Maximum Days:', 'ed-dates-ck'); ?>
-                                    <input type="number" name="ed_dates_ck_shipping_methods[<?php echo esc_attr($method_id); ?>][max_days]"
-                                           value="<?php echo esc_attr($method_settings['max_days']); ?>" min="0">
-                                </label>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                </table>
+                        </div>
+                    </div>
+                </div>
 
                 <?php submit_button(); ?>
             </form>
         </div>
+
+        <script>
+        jQuery(function($) {
+            // Tab switching
+            $('.nav-tab').on('click', function(e) {
+                e.preventDefault();
+                var tab = $(this).data('tab');
+                
+                // Update tabs
+                $('.nav-tab').removeClass('nav-tab-active');
+                $(this).addClass('nav-tab-active');
+                
+                // Update content
+                $('.ed-dates-ck-tab-content').hide();
+                $('#' + tab).show();
+                
+                // Update URL without page reload
+                var url = new URL(window.location);
+                url.searchParams.set('tab', tab);
+                window.history.pushState({}, '', url);
+            });
+        });
+        </script>
         <?php
     }
 
@@ -335,19 +387,30 @@ class ED_Dates_CK_Admin {
             return;
         }
 
-        wp_enqueue_script(
-            'ed-dates-ck-admin',
-            ED_DATES_CK_PLUGIN_URL . 'assets/js/admin.js',
-            array('jquery'),
-            ED_DATES_CK_VERSION,
-            true
-        );
-
+        wp_enqueue_style('jquery-ui-datepicker');
+        wp_enqueue_script('jquery-ui-datepicker');
+        
         wp_enqueue_style(
             'ed-dates-ck-admin',
             ED_DATES_CK_PLUGIN_URL . 'assets/css/admin.css',
             array(),
             ED_DATES_CK_VERSION
         );
+
+        wp_enqueue_script(
+            'ed-dates-ck-admin',
+            ED_DATES_CK_PLUGIN_URL . 'assets/js/admin.js',
+            array('jquery', 'jquery-ui-datepicker'),
+            ED_DATES_CK_VERSION,
+            true
+        );
+
+        wp_localize_script('ed-dates-ck-admin', 'edDatesCkAdmin', array(
+            'i18n' => array(
+                'selectDates' => __('Select Dates', 'ed-dates-ck'),
+                'done' => __('Done', 'ed-dates-ck'),
+                'cancel' => __('Cancel', 'ed-dates-ck')
+            )
+        ));
     }
 } 
