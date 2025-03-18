@@ -4,6 +4,11 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.20] - 2025-03-19
+### Fixed
+- Fixed persistent single-column layout on shipping methods settings page. Switched to a float-based layout for better compatibility.
+- Removed estimated delivery time block from product pages by unregistering the block.
+
 ## [1.0.19] - 2025-03-19
 ### Fixed
 - Fixed shipping methods settings page still displaying in a single column despite previous fixes. Added `!important` to the `grid-template-columns` CSS rule as a last resort to force the three-column layout.

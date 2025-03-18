@@ -3,7 +3,7 @@
  * Plugin Name: ED Dates CK
  * Plugin URI: https://customkings.com/
  * Description: Display estimated delivery dates on product, cart, and checkout pages.
- * Version: 1.0.19
+ * Version: 1.0.20
  * Author: CustomKings
  * Author URI: https://customkings.com/
  * Text Domain: ed-dates-ck
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ED_DATES_CK_VERSION', '1.0.19');
+define('ED_DATES_CK_VERSION', '1.0.20');
 define('ED_DATES_CK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('ED_DATES_CK_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ED_DATES_CK_PLUGIN_PATH', __DIR__);
@@ -75,7 +75,7 @@ function ed_dates_ck_init() {
     ED_Dates_CK_Product::get_instance();
 
     // Initialize blocks class
-    ED_Dates_CK_Blocks::get_instance();
+    // ED_Dates_CK_Blocks::get_instance();
 }
 add_action('plugins_loaded', 'ed_dates_ck_init');
 
