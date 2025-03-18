@@ -64,6 +64,10 @@
     },
     "style": {
       "type": "object"
+    },
+    "dateFormat": {
+        "type": "string",
+        "default": "range"
     }
   },
   "textdomain": "ed-dates-ck",

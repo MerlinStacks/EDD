@@ -39,33 +39,58 @@ class ED_Dates_CK_Blocks {
      */
     public function __construct() {
         add_action( 'init', array( $this, 'register_blocks' ) );
-        add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
         add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
     }
+
+     /**
+      * Enqueue block assets for both editor and front-end.
+      */
+     public function enqueue_block_assets() {
+         // Enqueue block styles
+         wp_enqueue_style(
+             'ed-dates-ck-block-style',
+             ED_DATES_CK_PLUGIN_URL . 'blocks/build/style-index.css',
+             array(),
+             ED_DATES_CK_VERSION
+         );
+
+         // Enqueue dashicons for the calendar icon
+         wp_enqueue_style( 'dashicons' );
+     }
 
     /**
      * Register blocks.
      */
     public function register_blocks() {
-        // Register block script
+        // Block name.
+        $block_name = 'ed-dates-ck/estimated-delivery';
+
+        // Block assets.
+        $editor_script = 'blocks/build/index.js';
+        $editor_style = 'blocks/build/index.css';
+        $style = 'blocks/build/style-index.css';
+        $view_script = 'blocks/build/view.js';
+
+        // Register block script.
         wp_register_script(
             'ed-dates-ck-block-editor',
-            ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.js',
+            ED_DATES_CK_PLUGIN_URL . $editor_script,
             array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-            ED_DATES_CK_VERSION
+            ED_DATES_CK_VERSION,
+            true
         );
 
-        // Register block styles
+        // Register block styles.
         wp_register_style(
             'ed-dates-ck-block-editor',
-            ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.css',
+            ED_DATES_CK_PLUGIN_URL . $editor_style,
             array('wp-edit-blocks'),
             ED_DATES_CK_VERSION
         );
 
         wp_register_style(
             'ed-dates-ck-block-style',
-            ED_DATES_CK_PLUGIN_URL . 'blocks/build/style-index.css',
+            ED_DATES_CK_PLUGIN_URL . $style,
             array(),
             ED_DATES_CK_VERSION
         );
@@ -73,57 +98,25 @@ class ED_Dates_CK_Blocks {
         // Register block view script
         wp_register_script(
             'ed-dates-ck-block-view',
-            ED_DATES_CK_PLUGIN_URL . 'blocks/build/view.js',
+            ED_DATES_CK_PLUGIN_URL . $view_script,
             array(),
             ED_DATES_CK_VERSION,
             true
         );
 
+        // Get attributes from block.json
+        $block_json = json_decode( file_get_contents( ED_DATES_CK_PLUGIN_PATH . '/blocks/build/block.json' ), true );
+		$attributes = $block_json['attributes'];
+
         register_block_type(
-            ED_DATES_CK_PLUGIN_PATH . 'blocks/build',
+            $block_name,
             array(
-                'editor_script' => 'ed-dates-ck-block-editor',
-                'editor_style' => 'ed-dates-ck-block-editor',
-                'style' => 'ed-dates-ck-block-style',
-                'view_script' => 'ed-dates-ck-block-view',
-                'render_callback' => array($this, 'render_estimated_delivery_block'),
-                'attributes' => array(
-                    'showIcon' => array(
-                        'type' => 'boolean',
-                        'default' => true
-                    ),
-                    'iconPosition' => array(
-                        'type' => 'string',
-                        'default' => 'left'
-                    ),
-                    'displayStyle' => array(
-                        'type' => 'string',
-                        'default' => 'default'
-                    ),
-                    'borderStyle' => array(
-                        'type' => 'string',
-                        'default' => 'left-accent'
-                    ),
-                    'dateFormat' => array(
-                        'type' => 'string',
-                        'default' => 'range'
-                    ),
-                    'className' => array(
-                        'type' => 'string'
-                    ),
-                    'textColor' => array(
-                        'type' => 'string'
-                    ),
-                    'backgroundColor' => array(
-                        'type' => 'string'
-                    ),
-                    'fontSize' => array(
-                        'type' => 'string'
-                    ),
-                    'style' => array(
-                        'type' => 'object'
-                    )
-                )
+                'editor_script'   => 'ed-dates-ck-block-editor',
+                'editor_style'    => 'ed-dates-ck-block-editor',
+                'style'           => 'ed-dates-ck-block-style',
+                'view_script'     => 'ed-dates-ck-block-view',
+                'render_callback' => array( $this, 'render_estimated_delivery_block' ),
+                'attributes'      => $attributes,
             )
         );
 
@@ -131,66 +124,6 @@ class ED_Dates_CK_Blocks {
         wp_enqueue_style('dashicons');
     }
 
-    /**
-     * Enqueue editor assets.
-     */
-    public function enqueue_editor_assets() {
-        $asset_file = ED_DATES_CK_PLUGIN_PATH . '/blocks/build/index.asset.php';
-        
-        if ( file_exists( $asset_file ) ) {
-            $asset = require $asset_file;
-            
-            // Enqueue editor script
-            wp_enqueue_script(
-                'ed-dates-ck-editor-script',
-                ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.js',
-                $asset['dependencies'],
-                $asset['version'],
-                true
-            );
-
-            // Enqueue editor styles
-            wp_enqueue_style(
-                'ed-dates-ck-editor-style',
-                ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.css',
-                array( 'wp-edit-blocks' ),
-                $asset['version']
-            );
-
-            // Add translation support
-            if ( function_exists( 'wp_set_script_translations' ) ) {
-                wp_set_script_translations(
-                    'ed-dates-ck-editor-script',
-                    'ed-dates-ck',
-                    ED_DATES_CK_PLUGIN_PATH . '/languages'
-                );
-            }
-        } else {
-            error_log( 'ED Dates CK - Asset file not found: ' . $asset_file );
-        }
-    }
-
-    /**
-     * Enqueue block assets for both editor and front-end.
-     */
-    public function enqueue_block_assets() {
-        $asset_file = ED_DATES_CK_PLUGIN_PATH . '/blocks/build/index.asset.php';
-        
-        if ( file_exists( $asset_file ) ) {
-            $asset = require $asset_file;
-            
-            // Enqueue block styles
-            wp_enqueue_style(
-                'ed-dates-ck-style',
-                ED_DATES_CK_PLUGIN_URL . 'blocks/build/style-index.css',
-                array(),
-                $asset['version']
-            );
-
-            // Enqueue dashicons for the calendar icon
-            wp_enqueue_style( 'dashicons' );
-        }
-    }
 
     /**
      * Render the estimated delivery block.
@@ -321,4 +254,4 @@ class ED_Dates_CK_Blocks {
 }
 
 // Initialize the blocks class.
-ED_Dates_CK_Blocks::get_instance(); 
+ED_Dates_CK_Blocks::get_instance();

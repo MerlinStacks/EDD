@@ -4,6 +4,22 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.19] - 2025-03-19
+### Fixed
+- Fixed shipping methods settings page still displaying in a single column despite previous fixes. Added `!important` to the `grid-template-columns` CSS rule as a last resort to force the three-column layout.
+
+## [1.0.18] - 2025-03-19
+### Fixed
+- Fixed block styles not applying on the frontend. Re-added `enqueue_block_assets` to explicitly enqueue frontend styles.
+
+## [1.0.17] - 2025-03-19
+### Fixed
+- Fixed block editor error "Your site doesn’t include support for the 'ed-dates-ck/estimated-delivery' block". Ensured the `ED_Dates_CK_Blocks` class is initialized and the block is registered correctly.
+
+## [1.0.16] - 2025-03-19
+### Fixed
+- Fixed shipping methods settings page displaying in a single column. Updated JavaScript selectors and event handlers to correctly interact with the DOM and AJAX functionality.
+
 ## [1.0.15] - 2025-03-19
 ### Fixed
 - Fixed PHP fatal error caused by undefined method `get_transit_times`.
@@ -174,4 +190,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shipping method transit times
 - Order cutoff time settings
 - Product page integration
-- Cart and checkout page integration 
+- Cart and checkout page integration
