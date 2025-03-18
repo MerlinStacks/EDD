@@ -418,28 +418,31 @@ class ED_Dates_CK_Admin {
                 </div>
 
                 <div id="shipping" class="ed-dates-ck-tab-content" <?php echo $this->active_tab !== 'shipping' ? 'style="display:none;"' : ''; ?>>
-                    <div class="ed-dates-ck-steps">
+                    <div class="ed-dates-ck-shipping-methods">
                         <!-- Step 1: Select Shipping Zone -->
                         <div class="ed-dates-ck-step">
                             <div class="ed-dates-ck-step-header">
-                                <?php esc_html_e('Step 1', 'ed-dates-ck'); ?>
-                                <br>
-                                <?php esc_html_e('Select Shipping Zone', 'ed-dates-ck'); ?>
+                                <h3>
+                                    <span class="step-number">1</span>
+                                    <?php esc_html_e('Select Shipping Zone', 'ed-dates-ck'); ?>
+                                </h3>
                             </div>
                             <div class="ed-dates-ck-step-content">
-                                <div class="ed-dates-ck-zone-list">
+                                <div class="ed-dates-ck-zone-items">
                                     <?php
                                     $zones = WC_Shipping_Zones::get_zones();
                                     foreach ($zones as $zone_id => $zone) {
                                         ?>
                                         <div class="ed-dates-ck-zone-item" data-zone-id="<?php echo esc_attr($zone_id); ?>">
-                                            <?php echo esc_html($zone['zone_name']); ?>
+                                            <span class="zone-name"><?php echo esc_html($zone['zone_name']); ?></span>
+                                            <span class="zone-regions"><?php echo esc_html($this->get_zone_regions_text($zone)); ?></span>
                                         </div>
                                         <?php
                                     }
                                     ?>
                                     <div class="ed-dates-ck-zone-item" data-zone-id="0">
-                                        <?php esc_html_e('Rest of World', 'ed-dates-ck'); ?>
+                                        <span class="zone-name"><?php esc_html_e('Rest of World', 'ed-dates-ck'); ?></span>
+                                        <span class="zone-regions"><?php esc_html_e('Any region not covered by other zones', 'ed-dates-ck'); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -448,13 +451,16 @@ class ED_Dates_CK_Admin {
                         <!-- Step 2: Choose Shipping Method -->
                         <div class="ed-dates-ck-step">
                             <div class="ed-dates-ck-step-header">
-                                <?php esc_html_e('Step 2', 'ed-dates-ck'); ?>
-                                <br>
-                                <?php esc_html_e('Choose Shipping Method', 'ed-dates-ck'); ?>
+                                <h3>
+                                    <span class="step-number">2</span>
+                                    <?php esc_html_e('Choose Shipping Method', 'ed-dates-ck'); ?>
+                                </h3>
                             </div>
                             <div class="ed-dates-ck-step-content">
-                                <div class="ed-dates-ck-method-list">
-                                    <!-- Methods will be loaded dynamically -->
+                                <div class="ed-dates-ck-method-items">
+                                    <div class="ed-dates-ck-placeholder">
+                                        <?php esc_html_e('Select a shipping zone to view available methods', 'ed-dates-ck'); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -462,47 +468,82 @@ class ED_Dates_CK_Admin {
                         <!-- Step 3: Set Shipping Days -->
                         <div class="ed-dates-ck-step">
                             <div class="ed-dates-ck-step-header">
-                                <?php esc_html_e('Step 3', 'ed-dates-ck'); ?>
-                                <br>
-                                <?php esc_html_e('Set Shipping Days', 'ed-dates-ck'); ?>
+                                <h3>
+                                    <span class="step-number">3</span>
+                                    <?php esc_html_e('Configure Delivery Settings', 'ed-dates-ck'); ?>
+                                </h3>
                             </div>
                             <div class="ed-dates-ck-step-content">
                                 <div class="ed-dates-ck-days-settings">
-                                    <div class="ed-dates-ck-days-group">
+                                    <div class="ed-dates-ck-form-row">
                                         <label>
-                                            <?php esc_html_e('Min days', 'ed-dates-ck'); ?>
-                                            <span class="ed-dates-ck-info-icon" title="<?php esc_attr_e('Minimum number of days for delivery', 'ed-dates-ck'); ?>">?</span>
+                                            <?php esc_html_e('Minimum Days', 'ed-dates-ck'); ?>
+                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help" 
+                                                  title="<?php esc_attr_e('Minimum number of days for delivery', 'ed-dates-ck'); ?>">
+                                            </span>
                                         </label>
                                         <input type="number" class="ed-dates-ck-min-days" min="0" step="1" value="2">
+                                        <p class="description">
+                                            <?php esc_html_e('The minimum number of days needed for delivery', 'ed-dates-ck'); ?>
+                                        </p>
                                     </div>
 
-                                    <div class="ed-dates-ck-days-group">
+                                    <div class="ed-dates-ck-form-row">
                                         <label>
-                                            <?php esc_html_e('Max days', 'ed-dates-ck'); ?>
-                                            <span class="ed-dates-ck-info-icon" title="<?php esc_attr_e('Maximum number of days for delivery', 'ed-dates-ck'); ?>">?</span>
+                                            <?php esc_html_e('Maximum Days', 'ed-dates-ck'); ?>
+                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help" 
+                                                  title="<?php esc_attr_e('Maximum number of days for delivery', 'ed-dates-ck'); ?>">
+                                            </span>
                                         </label>
                                         <input type="number" class="ed-dates-ck-max-days" min="0" step="1" value="5">
+                                        <p class="description">
+                                            <?php esc_html_e('The maximum number of days needed for delivery', 'ed-dates-ck'); ?>
+                                        </p>
                                     </div>
 
-                                    <div class="ed-dates-ck-cutoff-time">
+                                    <div class="ed-dates-ck-form-row">
                                         <label>
                                             <?php esc_html_e('Cutoff Time', 'ed-dates-ck'); ?>
-                                            <span class="ed-dates-ck-info-icon" title="<?php esc_attr_e('Orders placed after this time will be processed the next day', 'ed-dates-ck'); ?>">?</span>
+                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help" 
+                                                  title="<?php esc_attr_e('Orders placed after this time will be processed the next day', 'ed-dates-ck'); ?>">
+                                            </span>
                                         </label>
                                         <input type="time" class="ed-dates-ck-cutoff" value="16:00">
+                                        <p class="description">
+                                            <?php esc_html_e('Orders placed after this time will be processed the next business day', 'ed-dates-ck'); ?>
+                                        </p>
                                     </div>
 
-                                    <div class="ed-dates-ck-holiday-settings">
+                                    <div class="ed-dates-ck-form-row">
                                         <label>
-                                            <input type="checkbox" class="ed-dates-ck-non-working-days">
-                                            <?php esc_html_e('Non-Working Days', 'ed-dates-ck'); ?>
+                                            <?php esc_html_e('Additional Settings', 'ed-dates-ck'); ?>
                                         </label>
+                                        <div class="ed-dates-ck-checkbox-group">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" class="ed-dates-ck-non-working-days">
+                                                <?php esc_html_e('Use Non-Working Days', 'ed-dates-ck'); ?>
+                                                <span class="description">
+                                                    <?php esc_html_e('Apply shop closed days to this method', 'ed-dates-ck'); ?>
+                                                </span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" class="ed-dates-ck-overwrite-holidays">
+                                                <?php esc_html_e('Override Global Holidays', 'ed-dates-ck'); ?>
+                                                <span class="description">
+                                                    <?php esc_html_e('Set method-specific holidays', 'ed-dates-ck'); ?>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="ed-dates-ck-form-row ed-dates-ck-method-holidays" style="display: none;">
                                         <label>
-                                            <input type="checkbox" class="ed-dates-ck-overwrite-holidays">
-                                            <?php esc_html_e('Overwrite Holidays', 'ed-dates-ck'); ?>
+                                            <?php esc_html_e('Method-Specific Holidays', 'ed-dates-ck'); ?>
                                         </label>
-                                        <div class="ed-dates-ck-holidays-dates">
-                                            <input type="text" class="ed-dates-ck-holiday-picker" placeholder="<?php esc_attr_e('Select holiday dates', 'ed-dates-ck'); ?>">
+                                        <div class="ed-dates-ck-holiday-picker-wrapper">
+                                            <input type="text" class="ed-dates-ck-holiday-picker" 
+                                                   placeholder="<?php esc_attr_e('Select holiday dates', 'ed-dates-ck'); ?>">
+                                            <div class="ed-dates-ck-holiday-dates"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -511,81 +552,43 @@ class ED_Dates_CK_Admin {
                     </div>
 
                     <div class="ed-dates-ck-save">
-                        <?php submit_button(__('Save Changes', 'ed-dates-ck')); ?>
+                        <button type="button" class="button button-primary ed-dates-ck-save-method">
+                            <?php esc_html_e('Save Method Settings', 'ed-dates-ck'); ?>
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
+        <?php
+    }
 
-        <script>
-        jQuery(function($) {
-            // Tab switching
-            $('.nav-tab').on('click', function(e) {
-                e.preventDefault();
-                var tab = $(this).data('tab');
-                
-                // Update tabs
-                $('.nav-tab').removeClass('nav-tab-active');
-                $(this).addClass('nav-tab-active');
-                
-                // Update content
-                $('.ed-dates-ck-tab-content').hide();
-                $('#' + tab).show();
-                
-                // Update URL without page reload
-                var url = new URL(window.location);
-                url.searchParams.set('tab', tab);
-                window.history.pushState({}, '', url);
-            });
-
-            // Initialize tooltips
-            $('.ed-dates-ck-info-icon').tooltip();
-
-            // Initialize datepicker for holidays
-            $('.ed-dates-ck-holiday-picker').datepicker({
-                dateFormat: 'yy-mm-dd',
-                multidate: true,
-                multidateSeparator: ', '
-            });
-
-            // Zone selection
-            $('.ed-dates-ck-zone-item').on('click', function() {
-                $('.ed-dates-ck-zone-item').removeClass('active');
-                $(this).addClass('active');
-                loadShippingMethods($(this).data('zone-id'));
-            });
-
-            // Load shipping methods for a zone
-            function loadShippingMethods(zoneId) {
-                // This would typically be an AJAX call to get methods
-                // For now, we'll simulate it with static data
-                var methodsHtml = '';
-                <?php foreach ($shipping_methods as $method_id => $method_data) : ?>
-                methodsHtml += '<div class="ed-dates-ck-method-item" data-method-id="<?php echo esc_attr($method_id); ?>">' +
-                              '<?php echo esc_js($method_data['title']); ?>' +
-                              '</div>';
-                <?php endforeach; ?>
-                $('.ed-dates-ck-method-list').html(methodsHtml);
-
-                // Bind click event to methods
-                $('.ed-dates-ck-method-item').on('click', function() {
-                    $('.ed-dates-ck-method-item').removeClass('active');
-                    $(this).addClass('active');
-                    loadMethodSettings($(this).data('method-id'));
-                });
-            }
-
-            // Load settings for a method
-            function loadMethodSettings(methodId) {
-                var settings = <?php echo json_encode($saved_methods); ?>;
-                if (settings[methodId]) {
-                    $('.ed-dates-ck-min-days').val(settings[methodId].min_days);
-                    $('.ed-dates-ck-max-days').val(settings[methodId].max_days);
+    /**
+     * Get formatted text for zone regions
+     */
+    private function get_zone_regions_text($zone) {
+        $regions = array();
+        
+        if (!empty($zone['zone_locations'])) {
+            foreach ($zone['zone_locations'] as $location) {
+                switch ($location->type) {
+                    case 'country':
+                        $country = WC()->countries->countries[$location->code];
+                        $regions[] = $country;
+                        break;
+                    case 'state':
+                        $country_state = explode(':', $location->code);
+                        $country = WC()->countries->countries[$country_state[0]];
+                        $state = WC()->countries->get_states($country_state[0])[$country_state[1]];
+                        $regions[] = "$state, $country";
+                        break;
+                    case 'postcode':
+                        $regions[] = __('Postcodes: ', 'ed-dates-ck') . $location->code;
+                        break;
                 }
             }
-        });
-        </script>
-        <?php
+        }
+        
+        return implode(', ', $regions) ?: __('No regions set', 'ed-dates-ck');
     }
 
     /**

@@ -8,6 +8,7 @@ jQuery(function($) {
             this.initShippingZones();
             this.initSaveHandler();
             this.initTabSwitching();
+            this.initHolidayToggles();
         },
 
         initTooltips: function() {
@@ -16,7 +17,9 @@ jQuery(function($) {
                     my: 'center bottom-10',
                     at: 'center top'
                 },
-                tooltipClass: 'ed-dates-ck-tooltip'
+                classes: {
+                    'ui-tooltip': 'ed-dates-ck-tooltip'
+                }
             });
         },
 
@@ -33,7 +36,38 @@ jQuery(function($) {
                             left: $(input).offset().left
                         });
                     }, 0);
+                },
+                onSelect: function(dateText) {
+                    var $container = $(this).siblings('.ed-dates-ck-holiday-dates');
+                    EDDatesAdmin.addHolidayDate($container, dateText);
+                    $(this).val('');
                 }
+            });
+
+            // Handle existing holiday dates
+            $('.ed-dates-ck-holiday-date button').on('click', function() {
+                $(this).closest('.ed-dates-ck-holiday-date').remove();
+            });
+        },
+
+        addHolidayDate: function($container, dateText) {
+            var date = $.datepicker.parseDate('yy-mm-dd', dateText);
+            var displayDate = $.datepicker.formatDate('MM d, yy', date);
+            
+            var $existing = $container.find('input[value="' + dateText + '"]');
+            if ($existing.length) {
+                return;
+            }
+
+            var $date = $('<div class="ed-dates-ck-holiday-date"></div>');
+            $date.append('<input type="hidden" name="method_holidays[]" value="' + dateText + '">');
+            $date.append('<span>' + displayDate + '</span>');
+            $date.append('<button type="button" class="remove-date">&times;</button>');
+            
+            $container.append($date);
+
+            $date.find('button').on('click', function() {
+                $(this).closest('.ed-dates-ck-holiday-date').remove();
             });
         },
 
@@ -53,16 +87,13 @@ jQuery(function($) {
                 $(this).addClass('active');
                 self.loadMethodSettings($(this).data('method-id'));
             });
-
-            // Settings changes
-            $('.ed-dates-ck-days-settings input').on('change', function() {
-                self.updateMethodSettings();
-            });
         },
 
         loadShippingMethods: function(zoneId) {
             var self = this;
-            $('.ed-dates-ck-method-list').addClass('loading');
+            var $methodList = $('.ed-dates-ck-method-items');
+            
+            $methodList.addClass('ed-dates-ck-loading');
 
             $.ajax({
                 url: ajaxurl,
@@ -74,18 +105,25 @@ jQuery(function($) {
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('.ed-dates-ck-method-list').html(response.data.html);
+                        $methodList.html(response.data.html);
+                    } else {
+                        self.showNotice('error', response.data.message);
                     }
                 },
+                error: function() {
+                    self.showNotice('error', edDatesCkAdmin.i18n.errorLoading);
+                },
                 complete: function() {
-                    $('.ed-dates-ck-method-list').removeClass('loading');
+                    $methodList.removeClass('ed-dates-ck-loading');
                 }
             });
         },
 
         loadMethodSettings: function(methodId) {
             var self = this;
-            $('.ed-dates-ck-days-settings').addClass('loading');
+            var $settings = $('.ed-dates-ck-days-settings');
+            
+            $settings.addClass('ed-dates-ck-loading');
 
             $.ajax({
                 url: ajaxurl,
@@ -98,10 +136,15 @@ jQuery(function($) {
                 success: function(response) {
                     if (response.success) {
                         self.populateMethodSettings(response.data);
+                    } else {
+                        self.showNotice('error', response.data.message);
                     }
                 },
+                error: function() {
+                    self.showNotice('error', edDatesCkAdmin.i18n.errorLoading);
+                },
                 complete: function() {
-                    $('.ed-dates-ck-days-settings').removeClass('loading');
+                    $settings.removeClass('ed-dates-ck-loading');
                 }
             });
         },
@@ -113,22 +156,56 @@ jQuery(function($) {
             $('.ed-dates-ck-non-working-days').prop('checked', settings.non_working_days || false);
             $('.ed-dates-ck-overwrite-holidays').prop('checked', settings.overwrite_holidays || false);
             
-            if (settings.holidays) {
-                $('.ed-dates-ck-holiday-picker').datepicker('setDate', settings.holidays);
+            var $holidayDates = $('.ed-dates-ck-holiday-dates').empty();
+            if (settings.holidays && settings.holidays.length) {
+                settings.holidays.forEach(function(date) {
+                    EDDatesAdmin.addHolidayDate($holidayDates, date);
+                });
             }
+
+            this.toggleHolidayPicker(settings.overwrite_holidays || false);
         },
 
-        updateMethodSettings: function() {
-            var activeMethod = $('.ed-dates-ck-method-item.active').data('method-id');
-            if (!activeMethod) return;
+        initHolidayToggles: function() {
+            var self = this;
+            
+            $('.ed-dates-ck-overwrite-holidays').on('change', function() {
+                self.toggleHolidayPicker($(this).is(':checked'));
+            });
+        },
 
+        toggleHolidayPicker: function(show) {
+            $('.ed-dates-ck-method-holidays')[show ? 'slideDown' : 'slideUp']();
+        },
+
+        initSaveHandler: function() {
+            var self = this;
+            
+            $('.ed-dates-ck-save-method').on('click', function(e) {
+                e.preventDefault();
+                self.saveMethodSettings();
+            });
+        },
+
+        saveMethodSettings: function() {
+            var self = this;
+            var $activeMethod = $('.ed-dates-ck-method-item.active');
+            
+            if (!$activeMethod.length) {
+                self.showNotice('error', edDatesCkAdmin.i18n.selectMethod);
+                return;
+            }
+
+            var methodId = $activeMethod.data('method-id');
             var settings = {
                 min_days: $('.ed-dates-ck-min-days').val(),
                 max_days: $('.ed-dates-ck-max-days').val(),
                 cutoff_time: $('.ed-dates-ck-cutoff').val(),
                 non_working_days: $('.ed-dates-ck-non-working-days').is(':checked'),
                 overwrite_holidays: $('.ed-dates-ck-overwrite-holidays').is(':checked'),
-                holidays: $('.ed-dates-ck-holiday-picker').val()
+                holidays: $('.ed-dates-ck-holiday-dates input[type="hidden"]').map(function() {
+                    return $(this).val();
+                }).get()
             };
 
             $.ajax({
@@ -136,61 +213,21 @@ jQuery(function($) {
                 type: 'POST',
                 data: {
                     action: 'ed_dates_ck_save_method_settings',
-                    method_id: activeMethod,
+                    method_id: methodId,
                     settings: settings,
                     nonce: edDatesCkAdmin.nonce
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Show success message
-                        this.showNotice('success', edDatesCkAdmin.i18n.settingsSaved);
+                        self.showNotice('success', response.data.message);
                     } else {
-                        // Show error message
-                        this.showNotice('error', response.data.message || edDatesCkAdmin.i18n.errorSaving);
+                        self.showNotice('error', response.data.message);
                     }
+                },
+                error: function() {
+                    self.showNotice('error', edDatesCkAdmin.i18n.errorSaving);
                 }
             });
-        },
-
-        initSaveHandler: function() {
-            var self = this;
-            
-            $('.ed-dates-ck-save .button-primary').on('click', function(e) {
-                e.preventDefault();
-                self.saveAllSettings();
-            });
-        },
-
-        saveAllSettings: function() {
-            var self = this;
-            var $form = $('form').first();
-            var formData = new FormData($form[0]);
-
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.success) {
-                        self.showNotice('success', edDatesCkAdmin.i18n.settingsSaved);
-                    } else {
-                        self.showNotice('error', response.data.message || edDatesCkAdmin.i18n.errorSaving);
-                    }
-                }
-            });
-        },
-
-        showNotice: function(type, message) {
-            var $notice = $('<div class="notice notice-' + type + ' is-dismissible"><p>' + message + '</p></div>');
-            $('.wrap h1').after($notice);
-            
-            setTimeout(function() {
-                $notice.fadeOut(function() {
-                    $(this).remove();
-                });
-            }, 3000);
         },
 
         initTabSwitching: function() {
@@ -208,6 +245,17 @@ jQuery(function($) {
                 url.searchParams.set('tab', tab);
                 window.history.pushState({}, '', url);
             });
+        },
+
+        showNotice: function(type, message) {
+            var $notice = $('<div class="notice notice-' + type + ' is-dismissible"><p>' + message + '</p></div>');
+            $('.wrap h1').after($notice);
+            
+            setTimeout(function() {
+                $notice.fadeOut(function() {
+                    $(this).remove();
+                });
+            }, 3000);
         }
     };
 

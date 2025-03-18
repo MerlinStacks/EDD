@@ -219,6 +219,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     overflow: hidden;
+    min-width: 300px;
 }
 
 .ed-dates-ck-step-header {
@@ -231,6 +232,21 @@
     margin: 0;
     font-size: 14px;
     color: #23282d;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #2271b1;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 12px;
 }
 
 .ed-dates-ck-step-content {
@@ -253,19 +269,42 @@
 }
 
 .ed-dates-ck-zone-item:hover {
-    border-color: #007cba;
-    background: #f0f0f1;
+    border-color: #2271b1;
+    background: #f0f7fc;
 }
 
 .ed-dates-ck-zone-item.active {
-    border-color: #007cba;
+    border-color: #2271b1;
     background: #f0f7fc;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.zone-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.zone-regions {
+    display: block;
+    font-size: 12px;
+    color: #666;
 }
 
 /* Method Selection */
 .ed-dates-ck-method-items {
     max-height: 400px;
     overflow-y: auto;
+}
+
+.ed-dates-ck-placeholder {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    background: #f8f9fa;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
 }
 
 .ed-dates-ck-method-item {
@@ -278,13 +317,14 @@
 }
 
 .ed-dates-ck-method-item:hover {
-    border-color: #007cba;
-    background: #f0f0f1;
+    border-color: #2271b1;
+    background: #f0f7fc;
 }
 
 .ed-dates-ck-method-item.active {
-    border-color: #007cba;
+    border-color: #2271b1;
     background: #f0f7fc;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .ed-dates-ck-method-title {
@@ -303,17 +343,22 @@
 }
 
 .ed-dates-ck-form-row {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.ed-dates-ck-form-row:last-child {
+    margin-bottom: 0;
 }
 
 .ed-dates-ck-form-row label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: 600;
 }
 
 .ed-dates-ck-form-row input[type="number"],
-.ed-dates-ck-form-row input[type="time"] {
+.ed-dates-ck-form-row input[type="time"],
+.ed-dates-ck-form-row input[type="text"] {
     width: 100%;
     max-width: 200px;
 }
@@ -324,30 +369,47 @@
     margin-top: 4px;
 }
 
+.ed-dates-ck-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin: 0 8px 0 0;
+}
+
 /* Holiday Picker */
-.ed-dates-ck-holiday-picker {
-    width: 100%;
-    max-width: 200px;
+.ed-dates-ck-holiday-picker-wrapper {
+    margin-top: 10px;
 }
 
 .ed-dates-ck-holiday-dates {
     margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .ed-dates-ck-holiday-date {
     display: inline-flex;
     align-items: center;
     background: #f0f7fc;
-    border: 1px solid #007cba;
+    border: 1px solid #2271b1;
     border-radius: 3px;
     padding: 4px 8px;
-    margin: 0 8px 8px 0;
 }
 
 .ed-dates-ck-holiday-date button {
     background: none;
     border: none;
-    color: #007cba;
+    color: #2271b1;
     cursor: pointer;
     margin-left: 8px;
     padding: 0;
@@ -370,20 +432,10 @@
 }
 
 /* Tooltips */
-.ed-dates-ck-tooltip {
-    padding: 8px 12px;
-    background: #23282d;
-    color: #fff;
-    border-radius: 3px;
-    font-size: 12px;
-    max-width: 200px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
 .ed-dates-ck-info-icon {
-    color: #007cba;
-    margin-left: 4px;
+    color: #2271b1;
     cursor: help;
+    vertical-align: middle;
 }
 
 /* Save Button */
@@ -391,6 +443,7 @@
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #ddd;
+    text-align: right;
 }
 
 /* Helper Classes */
@@ -409,12 +462,31 @@
 }
 
 /* Responsive Adjustments */
+@media screen and (max-width: 1200px) {
+    .ed-dates-ck-shipping-methods {
+        flex-wrap: wrap;
+    }
+
+    .ed-dates-ck-step {
+        flex: 1 1 calc(50% - 10px);
+        min-width: calc(50% - 10px);
+    }
+}
+
 @media screen and (max-width: 782px) {
     .ed-dates-ck-shipping-methods {
         flex-direction: column;
     }
 
     .ed-dates-ck-step {
+        flex: 1 1 100%;
+        min-width: 100%;
         margin-bottom: 20px;
+    }
+
+    .ed-dates-ck-form-row input[type="number"],
+    .ed-dates-ck-form-row input[type="time"],
+    .ed-dates-ck-form-row input[type="text"] {
+        max-width: 100%;
     }
 } 
