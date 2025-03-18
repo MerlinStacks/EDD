@@ -4,6 +4,20 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.11] - 2024-03-18
+### Fixed
+- Completely rebuilt block editor integration for better compatibility and reliability
+- Fixed block registration and asset loading issues
+- Improved block editor preview and controls
+- Added proper asset dependency management
+- Enhanced block styling with responsive design and dark mode support
+
+### Added
+- New block customization options (icon position, display styles, border styles)
+- RTL language support for block layout
+- Proper error handling for block registration and rendering
+- Comprehensive documentation in README.md
+
 ## [1.0.10] - 2024-03-18
 ### Fixed
 - Syntax error in blocks class causing PHP parse error

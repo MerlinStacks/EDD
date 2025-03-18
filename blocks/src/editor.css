@@ -1,34 +1,75 @@
-.ed-dates-ck-block {
+.wp-block-ed-dates-ck-estimated-delivery {
+    border: 1px dashed #ccc;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
     margin: 10px 0;
+    background: #fff;
 }
 
-.ed-dates-ck-block h3 {
-    margin: 0 0 10px;
-    font-size: 1.2em;
+.wp-block-ed-dates-ck-estimated-delivery .components-placeholder {
+    min-height: 100px;
+}
+
+.wp-block-ed-dates-ck-estimated-delivery .components-placeholder__label {
+    margin-bottom: 10px;
+}
+
+/* Editor-specific overrides */
+.editor-styles-wrapper .ed-dates-ck-block {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.editor-styles-wrapper .ed-dates-ck-block .ed-dates-ck-icon {
+    font-size: 24px;
+    color: #555;
+}
+
+.editor-styles-wrapper .ed-dates-ck-block .ed-dates-ck-content {
+    flex: 1;
+}
+
+.editor-styles-wrapper .ed-dates-ck-block h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
     color: #333;
 }
 
-.ed-dates-ck-block p {
+.editor-styles-wrapper .ed-dates-ck-block .delivery-date {
     margin: 0;
+    font-size: 14px;
     color: #666;
 }
 
-.ed-dates-ck-block em {
-    display: block;
-    margin-top: 10px;
-    font-size: 0.9em;
-    color: #999;
+/* Display Styles */
+.editor-styles-wrapper .ed-dates-ck-style-compact {
+    padding: 10px;
 }
 
-.ed-dates-ck-block-warning {
-    background-color: #fff6f6;
-    border-color: #ffb3b3;
+.editor-styles-wrapper .ed-dates-ck-style-prominent {
+    padding: 25px;
+    background: #f8f8f8;
 }
 
-.ed-dates-ck-block-warning p {
-    color: #cc0000;
+/* Border Styles */
+.editor-styles-wrapper .ed-dates-ck-border-left-accent {
+    border-left: 4px solid #007cba;
+}
+
+.editor-styles-wrapper .ed-dates-ck-border-full-border {
+    border: 1px solid #ddd;
+}
+
+/* Icon Positions */
+.editor-styles-wrapper .ed-dates-ck-icon-left {
+    flex-direction: row;
+}
+
+.editor-styles-wrapper .ed-dates-ck-icon-right {
+    flex-direction: row-reverse;
 } 

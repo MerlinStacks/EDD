@@ -1,47 +1,53 @@
-# Operating System files
+# Operating System Files
 .DS_Store
 Thumbs.db
 
-# IDE files
+# IDE Files
 .idea/
 .vscode/
 *.sublime-project
 *.sublime-workspace
+.cursor/
 
-# Node modules and build files
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
+# Dependencies
+/node_modules/
+/blocks/node_modules/
+/vendor/
 package-lock.json
-yarn.lock
-
-# WordPress specific
-wp-config.php
-wp-content/uploads/
-wp-content/upgrade/
-wp-content/backup-db/
-wp-content/cache/
-wp-content/backups/
-
-# Composer
-vendor/
+blocks/package-lock.json
 composer.lock
 
-# Build and test files
-build/
-dist/
-coverage/
-*.log
-*.zip
+# Build Files
+/blocks/build/*.map
+/blocks/build/*.asset.php
 
-# Environment files
+# Temporary Files
+*.log
+*.tmp
+*.temp
+.cache/
+
+# WordPress
+*.pot
+*.po
+*.mo
+*.zip
+*.tar.gz
+
+# Testing
+/phpunit.xml
+/tests/coverage/
+.phpunit.result.cache
+
+# Environment
 .env
 .env.*
 !.env.example
 
-# Temporary files
-*.tmp
+# Misc
 *.bak
 *.swp
-*~ 
+*.swo
+.sass-cache/
+*.css.map
+*.js.map 

@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",(function(){document.querySelectorAll(".wp-block-ed-dates-ck-estimated-delivery").forEach((e=>{}))}));

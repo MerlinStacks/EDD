@@ -1,13 +1,13 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
-    "apiVersion": 2,
+    "apiVersion": 3,
     "name": "ed-dates-ck/estimated-delivery",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "title": "Estimated Delivery Date",
-    "category": "woocommerce",
+    "category": "widgets",
     "icon": "calendar-alt",
-    "description": "Display estimated delivery date for the current product.",
-    "keywords": ["delivery", "date", "estimate", "shipping"],
+    "description": "Display estimated delivery date for WooCommerce products",
+    "keywords": ["delivery", "date", "woocommerce", "shipping"],
     "supports": {
         "html": false,
         "align": ["wide", "full"],
@@ -20,36 +20,12 @@
             "lineHeight": true
         },
         "color": {
-            "background": true,
             "text": true,
-            "link": true,
+            "background": true,
             "gradients": true
         }
     },
-    "textdomain": "ed-dates-ck",
-    "editorScript": "file:./index.js",
-    "editorStyle": "file:./editor.css",
-    "style": "file:./style.css",
     "attributes": {
-        "className": {
-            "type": "string",
-            "default": ""
-        },
-        "textColor": {
-            "type": "string"
-        },
-        "backgroundColor": {
-            "type": "string"
-        },
-        "fontSize": {
-            "type": "string"
-        },
-        "customFontSize": {
-            "type": "number"
-        },
-        "style": {
-            "type": "object"
-        },
         "showIcon": {
             "type": "boolean",
             "default": true
@@ -65,6 +41,26 @@
         "borderStyle": {
             "type": "string",
             "default": "left-accent"
+        },
+        "align": {
+            "type": "string"
+        },
+        "backgroundColor": {
+            "type": "string"
+        },
+        "textColor": {
+            "type": "string"
+        },
+        "fontSize": {
+            "type": "string"
+        },
+        "style": {
+            "type": "object"
         }
-    }
+    },
+    "textdomain": "ed-dates-ck",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./index.css",
+    "style": "file:./style.css",
+    "viewScript": "file:./view.js"
 } 
