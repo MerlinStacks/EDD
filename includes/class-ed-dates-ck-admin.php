@@ -478,7 +478,7 @@ class ED_Dates_CK_Admin {
                                     <div class="ed-dates-ck-form-row">
                                         <label>
                                             <?php esc_html_e('Minimum Days', 'ed-dates-ck'); ?>
-                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help" 
+                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help"
                                                   title="<?php esc_attr_e('Minimum number of days for delivery', 'ed-dates-ck'); ?>">
                                             </span>
                                         </label>
@@ -491,7 +491,7 @@ class ED_Dates_CK_Admin {
                                     <div class="ed-dates-ck-form-row">
                                         <label>
                                             <?php esc_html_e('Maximum Days', 'ed-dates-ck'); ?>
-                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help" 
+                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help"
                                                   title="<?php esc_attr_e('Maximum number of days for delivery', 'ed-dates-ck'); ?>">
                                             </span>
                                         </label>
@@ -501,47 +501,14 @@ class ED_Dates_CK_Admin {
                                         </p>
                                     </div>
 
-                                    <div class="ed-dates-ck-form-row">
-                                        <label>
-                                            <?php esc_html_e('Cutoff Time', 'ed-dates-ck'); ?>
-                                            <span class="ed-dates-ck-info-icon dashicons dashicons-editor-help" 
-                                                  title="<?php esc_attr_e('Orders placed after this time will be processed the next day', 'ed-dates-ck'); ?>">
-                                            </span>
-                                        </label>
-                                        <input type="time" class="ed-dates-ck-cutoff" value="16:00">
-                                        <p class="description">
-                                            <?php esc_html_e('Orders placed after this time will be processed the next business day', 'ed-dates-ck'); ?>
-                                        </p>
-                                    </div>
-
-                                    <div class="ed-dates-ck-form-row">
-                                        <label>
-                                            <?php esc_html_e('Additional Settings', 'ed-dates-ck'); ?>
-                                        </label>
-                                        <div class="ed-dates-ck-checkbox-group">
-                                            <label class="checkbox-label">
-                                                <input type="checkbox" class="ed-dates-ck-non-working-days">
-                                                <?php esc_html_e('Use Non-Working Days', 'ed-dates-ck'); ?>
-                                                <span class="description">
-                                                    <?php esc_html_e('Apply shop closed days to this method', 'ed-dates-ck'); ?>
-                                                </span>
-                                            </label>
-                                            <label class="checkbox-label">
-                                                <input type="checkbox" class="ed-dates-ck-overwrite-holidays">
-                                                <?php esc_html_e('Override Global Holidays', 'ed-dates-ck'); ?>
-                                                <span class="description">
-                                                    <?php esc_html_e('Set method-specific holidays', 'ed-dates-ck'); ?>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                    <!-- Removed Cutoff Time and Additional Settings -->
 
                                     <div class="ed-dates-ck-form-row ed-dates-ck-method-holidays" style="display: none;">
                                         <label>
                                             <?php esc_html_e('Method-Specific Holidays', 'ed-dates-ck'); ?>
                                         </label>
                                         <div class="ed-dates-ck-holiday-picker-wrapper">
-                                            <input type="text" class="ed-dates-ck-holiday-picker" 
+                                            <input type="text" class="ed-dates-ck-holiday-picker"
                                                    placeholder="<?php esc_attr_e('Select holiday dates', 'ed-dates-ck'); ?>">
                                             <div class="ed-dates-ck-holiday-dates"></div>
                                         </div>
@@ -581,9 +548,9 @@ class ED_Dates_CK_Admin {
                         $state = WC()->countries->get_states($country_state[0])[$country_state[1]];
                         $regions[] = "$state, $country";
                         break;
-                    case 'postcode':
-                        $regions[] = __('Postcodes: ', 'ed-dates-ck') . $location->code;
-                        break;
+                    // case 'postcode':
+                    //     $regions[] = __('Postcodes: ', 'ed-dates-ck') . $location->code;
+                    //     break;
                 }
             }
         }
@@ -781,5 +748,23 @@ class ED_Dates_CK_Admin {
                 )
             ));
         }
+
+        // Enqueue on WooCommerce Shipping Settings page
+        if (isset($_GET['page']) && $_GET['page'] === 'wc-settings' && isset($_GET['tab']) && $_GET['tab'] === 'shipping') {
+            wp_enqueue_style(
+                'ed-dates-ck-admin-shipping-settings',
+                ED_DATES_CK_PLUGIN_URL . 'assets/css/admin-shipping-settings.css',
+                array(),
+                ED_DATES_CK_VERSION
+            );
+
+            wp_enqueue_script(
+                'ed-dates-ck-admin-shipping-settings',
+                ED_DATES_CK_PLUGIN_URL . 'assets/js/admin-shipping-settings.js',
+                array('jquery'),
+                ED_DATES_CK_VERSION,
+                true
+            );
+        }
     }
-} 
+}

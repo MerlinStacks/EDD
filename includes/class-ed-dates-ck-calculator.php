@@ -39,8 +39,8 @@ class ED_Dates_CK_Calculator {
             $start_date = $this->get_start_date();
             $total_days = $this->calculate_total_days($product_id, $default_lead_time);
             
-            if (!is_array($total_days)) {
-                return array();
+            if (!is_array($total_days) || !isset($total_days['min']) || !isset($total_days['max'])) {
+                return array('start' => '', 'end' => '');
             }
 
             $earliest_delivery = $this->add_business_days($start_date, $total_days['min']);
@@ -90,24 +90,15 @@ class ED_Dates_CK_Calculator {
             }
 
             // Get shipping method transit times
-            $transit_times = $this->get_transit_times();
-            if (empty($transit_times)) {
-                return false;
-            }
-
-            // Calculate min and max transit times
-            $min_transit = PHP_INT_MAX;
-            $max_transit = 0;
-            foreach ($transit_times as $transit_time) {
-                $transit_days = intval($transit_time);
-                $min_transit = min($min_transit, $transit_days);
-                $max_transit = max($max_transit, $transit_days);
+            $transit_times = $this->get_transit_times($product_id);
+            if (empty($transit_times) || !isset($transit_times['min']) || !isset($transit_times['max'])) {
+                 return array('min' => $lead_time, 'max' => $lead_time);
             }
 
             // Return range
             return array(
-                'min' => $lead_time + $min_transit,
-                'max' => $lead_time + $max_transit
+                'min' => $lead_time + intval($transit_times['min']),
+                'max' => $lead_time + intval($transit_times['max'])
             );
         } catch (Exception $e) {
             error_log('ED Dates CK - Error calculating total days: ' . $e->getMessage());
@@ -133,6 +124,40 @@ class ED_Dates_CK_Calculator {
             return false;
         }
     }
+
+    /**
+     * Get transit times for the chosen shipping method
+     */
+    private function get_transit_times($product_id = null) {
+        try {
+            // Get chosen shipping methods from the session
+            $chosen_methods = WC()->session->get('chosen_shipping_methods');
+            
+            if (empty($chosen_methods)) {
+                return array();
+            }
+
+            // Use the first chosen method (usually there's only one)
+            $chosen_method = $chosen_methods[0];
+
+            // Get saved settings for the chosen method
+            $method_settings = get_option('ed_dates_ck_method_' . $chosen_method, array());
+
+            if (empty($method_settings) || !isset($method_settings['min_days']) || !isset($method_settings['max_days'])) {
+                return array();
+            }
+            
+            return array(
+                'min' => intval($method_settings['min_days']),
+                'max' => intval($method_settings['max_days'])
+            );
+
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error getting transit times: ' . $e->getMessage());
+            return array();
+        }
+    }
+
 
     /**
      * Add business days to date

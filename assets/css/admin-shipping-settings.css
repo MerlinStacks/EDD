@@ -1,0 +1,117 @@
+/* Style the shipping zone select */
+#shipping-zone-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Style the shipping method containers */
+.shipping_method, .shipping-method-transit-time {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+/* Style the shipping method title/label */
+.shipping_method label, .shipping-method-transit-time label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Style the transit time display */
+.shipping-method-transit-time {
+    background-color: #e9e9e9;
+    font-style: italic;
+}
+
+/* Add some visual separation */
+.shipping_method + .shipping_method,
+.shipping-method-transit-time + .shipping-method-transit-time {
+    margin-top: 15px;
+}
+
+/* Three-column layout */
+.ed-dates-ck-shipping-methods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.ed-dates-ck-step {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.ed-dates-ck-step-header {
+    background-color: #f5f5f5;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.ed-dates-ck-step-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.ed-dates-ck-step-content {
+    padding: 15px;
+}
+
+.ed-dates-ck-zone-items, .ed-dates-ck-method-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.ed-dates-ck-zone-item, .ed-dates-ck-method-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ed-dates-ck-zone-item:last-child, .ed-dates-ck-method-item:last-child {
+    border-bottom: none;
+}
+
+.ed-dates-ck-zone-item:hover, .ed-dates-ck-method-item:hover {
+    background-color: #f9f9f9;
+}
+
+.ed-dates-ck-zone-name {
+    font-weight: bold;
+}
+
+.ed-dates-ck-method-title {
+    font-weight: bold;
+}
+
+.ed-dates-ck-method-type {
+    font-style: italic;
+    color: #777;
+}
+
+.ed-dates-ck-placeholder {
+    padding: 10px;
+    text-align: center;
+    color: #777;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .ed-dates-ck-shipping-methods {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .ed-dates-ck-shipping-methods {
+        grid-template-columns: 1fr;
+    }
+}

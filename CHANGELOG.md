@@ -4,34 +4,13 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.14] - 2024-03-18
+## [1.0.15] - 2025-03-19
 ### Fixed
-- PHP Fatal error due to undefined constant ED_DATES_CK_URL in admin class
-- Updated constant name to ED_DATES_CK_PLUGIN_URL for consistency
+- Fixed PHP fatal error caused by undefined method `get_transit_times`.
+- Added `get_transit_times` method to retrieve shipping method transit times from session data.
+- Corrected return types of `calculate_total_days` and `calculate_delivery_range` to ensure consistent array structure.
 
-## [1.0.13] - 2024-03-18
-### Added
-- New step-by-step shipping methods configuration interface
-- Dynamic loading of shipping methods based on zone selection
-- Live preview of settings changes
-- Tooltips for better user guidance
-- Improved holiday date picker with better UX
-- AJAX-based settings saving with instant feedback
-
-### Changed
-- Completely redesigned shipping methods tab with modern UI
-- Enhanced admin interface with cleaner styling
-- Improved responsive design for all screen sizes
-- Better organization of shipping method settings
-- Updated holiday date picker with improved selection UI
-
-### Fixed
-- Holiday date picker selection issues
-- Settings not saving immediately
-- UI inconsistencies in shipping methods tab
-- Mobile layout issues in admin interface
-
-## [1.0.12] - 2024-03-18
+## [1.0.14] - 2025-03-19
 ### Added
 - New delivery date format options (range or latest date)
 - Default lead time setting in admin panel
