@@ -4,6 +4,45 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2024-03-18
+### Added
+- Enhanced block editor support with customizable delivery date display
+- New block settings for display style (Default, Compact, Prominent)
+- Optional calendar icon with position control
+- Border style options (Left Accent, Full Border, No Border)
+- Color customization for text and background
+- Font size controls and typography settings
+- Spacing controls for margin and padding
+- Dark mode support for block display
+- RTL language support for block layout
+- Responsive design for all screen sizes
+
+### Changed
+- Improved block preview in editor
+- Enhanced block rendering with better error handling
+- Updated block styles for better visual consistency
+- Improved accessibility in block display
+
+## [1.0.8] - 2024-03-18
+### Fixed
+- PHP Warning when accessing shipping method array indices
+- Added proper array checks in delivery date calculator
+- Improved error handling for shipping method settings
+### Added
+- Comprehensive error handling for DateTime operations
+- Type safety checks for all numeric inputs
+- Validation for lead time and shipping day ranges
+- Error logging for debugging purposes
+- Improved AJAX error responses with meaningful messages
+- Added step attribute to number inputs
+- Added tooltips for lead time fields
+### Changed
+- Improved handling of invalid option values
+- Better fallback behavior for error cases
+- Enhanced nonce verification in AJAX handlers
+- Improved validation of product and post data
+- Better error messages for users and developers
+
 ## [1.0.7] - 2024-03-18
 ### Fixed
 - Block editor integration completely rebuilt for better compatibility

@@ -1,6 +1,6 @@
 {
   "name": "ed-dates-ck-blocks",
-  "version": "1.0.0",
+  "version": "1.0.9",
   "description": "Block editor components for ED Dates CK plugin",
   "main": "build/index.js",
   "scripts": {

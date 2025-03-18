@@ -1,65 +1,143 @@
-.ed-dates-ck-delivery-date {
+/* Common styles for all delivery date displays */
+.ed-dates-ck-product-delivery,
+.ed-dates-ck-cart-delivery,
+.ed-dates-ck-checkout-delivery {
     margin: 1em 0;
     padding: 0.75em 1em;
-    background-color: #f7f7f7;
-    border: 1px solid #e5e5e5;
+    background-color: #f8f9fa;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: 0.95em;
     line-height: 1.5;
+    color: #2d3748;
 }
 
-.ed-dates-ck-delivery-date .ed-dates-ck-label {
+/* Product page specific styles */
+.ed-dates-ck-product-delivery {
+    margin: 1.5em 0;
+    border-left: 4px solid #4299e1;
+}
+
+.ed-dates-ck-product-delivery h4 {
+    margin: 0 0 0.5em 0;
+    font-size: 1.1em;
+    color: #2d3748;
+}
+
+.ed-dates-ck-product-delivery .delivery-date {
+    margin: 0;
+    font-size: 1.05em;
+    color: #4a5568;
+}
+
+/* Cart page specific styles */
+.ed-dates-ck-cart-delivery {
+    margin: 0.5em 0;
+    padding: 0.5em 0.75em;
+    background-color: transparent;
+    border: none;
+    border-left: 3px solid #4299e1;
+    font-size: 0.9em;
+}
+
+.ed-dates-ck-cart-delivery .label {
     font-weight: 600;
     margin-right: 0.5em;
 }
 
-.ed-dates-ck-delivery-date .ed-dates-ck-date {
-    color: #2c3338;
+.ed-dates-ck-cart-delivery .date {
+    color: #4a5568;
 }
 
-/* Cart and checkout specific styles */
-.woocommerce-cart .ed-dates-ck-delivery-date,
-.woocommerce-checkout .ed-dates-ck-delivery-date {
-    margin: 0.5em 0;
-    padding: 0.5em 0.75em;
-    font-size: 0.85em;
-    background-color: transparent;
-    border: none;
-    border-left: 3px solid #e5e5e5;
+/* Checkout page specific styles */
+.ed-dates-ck-checkout-delivery {
+    margin: 1.5em 0;
+    background-color: #ebf8ff;
+    border-color: #bee3f8;
+}
+
+.ed-dates-ck-checkout-delivery h3 {
+    margin: 0 0 0.5em 0;
+    font-size: 1.1em;
+    color: #2c5282;
+}
+
+.ed-dates-ck-checkout-delivery p {
+    margin: 0 0 0.5em 0;
+    font-size: 1.05em;
+    color: #2d3748;
+}
+
+.ed-dates-ck-checkout-delivery small {
+    display: block;
+    color: #718096;
+    font-size: 0.9em;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-    .ed-dates-ck-delivery-date {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-color: rgba(255, 255, 255, 0.1);
+    .ed-dates-ck-product-delivery,
+    .ed-dates-ck-cart-delivery,
+    .ed-dates-ck-checkout-delivery {
+        background-color: rgba(45, 55, 72, 0.1);
+        border-color: rgba(226, 232, 240, 0.1);
+        color: #e2e8f0;
     }
 
-    .ed-dates-ck-delivery-date .ed-dates-ck-date {
-        color: rgba(255, 255, 255, 0.9);
+    .ed-dates-ck-product-delivery {
+        border-left-color: #63b3ed;
     }
 
-    .woocommerce-cart .ed-dates-ck-delivery-date,
-    .woocommerce-checkout .ed-dates-ck-delivery-date {
-        border-left-color: rgba(255, 255, 255, 0.1);
+    .ed-dates-ck-product-delivery h4,
+    .ed-dates-ck-product-delivery .delivery-date {
+        color: #e2e8f0;
+    }
+
+    .ed-dates-ck-cart-delivery {
+        border-left-color: #63b3ed;
+    }
+
+    .ed-dates-ck-cart-delivery .date {
+        color: #e2e8f0;
+    }
+
+    .ed-dates-ck-checkout-delivery {
+        background-color: rgba(66, 153, 225, 0.1);
+        border-color: rgba(190, 227, 248, 0.1);
+    }
+
+    .ed-dates-ck-checkout-delivery h3,
+    .ed-dates-ck-checkout-delivery p {
+        color: #e2e8f0;
+    }
+
+    .ed-dates-ck-checkout-delivery small {
+        color: #a0aec0;
     }
 }
 
 /* RTL support */
-.rtl .ed-dates-ck-delivery-date .ed-dates-ck-label {
+.rtl .ed-dates-ck-product-delivery {
+    border-left: none;
+    border-right: 4px solid #4299e1;
+}
+
+.rtl .ed-dates-ck-cart-delivery {
+    border-left: none;
+    border-right: 3px solid #4299e1;
+}
+
+.rtl .ed-dates-ck-cart-delivery .label {
     margin-right: 0;
     margin-left: 0.5em;
 }
 
-.rtl.woocommerce-cart .ed-dates-ck-delivery-date,
-.rtl.woocommerce-checkout .ed-dates-ck-delivery-date {
-    border-left: none;
-    border-right: 3px solid #e5e5e5;
-}
-
 @media (prefers-color-scheme: dark) {
-    .rtl.woocommerce-cart .ed-dates-ck-delivery-date,
-    .rtl.woocommerce-checkout .ed-dates-ck-delivery-date {
-        border-right-color: rgba(255, 255, 255, 0.1);
+    .rtl .ed-dates-ck-product-delivery {
+        border-right-color: #63b3ed;
+    }
+
+    .rtl .ed-dates-ck-cart-delivery {
+        border-right-color: #63b3ed;
     }
 } 

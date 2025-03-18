@@ -45,102 +45,146 @@ class ED_Dates_CK_Display {
      * Enqueue necessary scripts and styles
      */
     public function enqueue_scripts() {
-        if (!is_product() && !is_cart() && !is_checkout()) {
-            return;
+        try {
+            if (!is_product() && !is_cart() && !is_checkout()) {
+                return;
+            }
+
+            if (!defined('ED_DATES_CK_URL')) {
+                error_log('ED Dates CK - Error: Plugin URL constant not defined');
+                return;
+            }
+
+            wp_enqueue_style(
+                'ed-dates-ck-style',
+                ED_DATES_CK_URL . 'assets/css/ed-dates-ck.css',
+                array(),
+                ED_DATES_CK_VERSION
+            );
+
+            wp_enqueue_script(
+                'ed-dates-ck-script',
+                ED_DATES_CK_URL . 'assets/js/ed-dates-ck.js',
+                array('jquery'),
+                ED_DATES_CK_VERSION,
+                true
+            );
+
+            wp_localize_script('ed-dates-ck-script', 'edDatesCk', array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('ed_dates_ck_nonce')
+            ));
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error enqueueing scripts: ' . $e->getMessage());
         }
-
-        wp_enqueue_style(
-            'ed-dates-ck-style',
-            ED_DATES_CK_URL . 'assets/css/ed-dates-ck.css',
-            array(),
-            ED_DATES_CK_VERSION
-        );
-
-        wp_enqueue_script(
-            'ed-dates-ck-script',
-            ED_DATES_CK_URL . 'assets/js/ed-dates-ck.js',
-            array('jquery'),
-            ED_DATES_CK_VERSION,
-            true
-        );
-
-        wp_localize_script('ed-dates-ck-script', 'edDatesCk', array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('ed_dates_ck_nonce')
-        ));
     }
 
     /**
      * Display estimated delivery date on product page
      */
     public function display_estimated_delivery() {
-        global $product;
-        
-        if (!$product) {
-            return;
+        try {
+            global $product;
+            
+            if (!$product || !($product instanceof WC_Product)) {
+                return;
+            }
+
+            $calculator = ED_Dates_CK_Calculator::get_instance();
+            if (!$calculator) {
+                error_log('ED Dates CK - Error: Could not initialize calculator');
+                return;
+            }
+
+            $delivery_date = $calculator->calculate_estimated_delivery($product->get_id());
+            if (!$delivery_date) {
+                return;
+            }
+
+            $this->render_delivery_date($delivery_date);
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error displaying delivery date: ' . $e->getMessage());
         }
-
-        $calculator = ED_Dates_CK_Calculator::get_instance();
-        $delivery_date = $calculator->calculate_estimated_delivery($product->get_id());
-
-        if (!$delivery_date) {
-            return;
-        }
-
-        $this->render_delivery_date($delivery_date);
     }
 
     /**
      * Display estimated delivery date in cart
      */
     public function display_cart_estimated_delivery($cart_item, $cart_item_key) {
-        if (!isset($cart_item['product_id'])) {
-            return;
+        try {
+            if (!is_array($cart_item) || !isset($cart_item['product_id'])) {
+                return;
+            }
+
+            $calculator = ED_Dates_CK_Calculator::get_instance();
+            if (!$calculator) {
+                error_log('ED Dates CK - Error: Could not initialize calculator');
+                return;
+            }
+
+            $delivery_date = $calculator->calculate_estimated_delivery($cart_item['product_id']);
+            if (!$delivery_date) {
+                return;
+            }
+
+            $this->render_delivery_date($delivery_date);
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error displaying cart delivery date: ' . $e->getMessage());
         }
-
-        $calculator = ED_Dates_CK_Calculator::get_instance();
-        $delivery_date = $calculator->calculate_estimated_delivery($cart_item['product_id']);
-
-        if (!$delivery_date) {
-            return;
-        }
-
-        $this->render_delivery_date($delivery_date);
     }
 
     /**
      * Display estimated delivery date in checkout
      */
     public function display_checkout_estimated_delivery($quantity_html, $cart_item, $cart_item_key) {
-        if (!isset($cart_item['product_id'])) {
+        try {
+            if (!is_array($cart_item) || !isset($cart_item['product_id'])) {
+                return $quantity_html;
+            }
+
+            $calculator = ED_Dates_CK_Calculator::get_instance();
+            if (!$calculator) {
+                error_log('ED Dates CK - Error: Could not initialize calculator');
+                return $quantity_html;
+            }
+
+            $delivery_date = $calculator->calculate_estimated_delivery($cart_item['product_id']);
+            if (!$delivery_date) {
+                return $quantity_html;
+            }
+
+            ob_start();
+            $this->render_delivery_date($delivery_date);
+            $output = ob_get_clean();
+            return $quantity_html . $output;
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error displaying checkout delivery date: ' . $e->getMessage());
             return $quantity_html;
         }
-
-        $calculator = ED_Dates_CK_Calculator::get_instance();
-        $delivery_date = $calculator->calculate_estimated_delivery($cart_item['product_id']);
-
-        if (!$delivery_date) {
-            return $quantity_html;
-        }
-
-        ob_start();
-        $this->render_delivery_date($delivery_date);
-        return $quantity_html . ob_get_clean();
     }
 
     /**
      * Render the delivery date HTML
      */
     private function render_delivery_date($delivery_date) {
-        $settings = get_option('ed_dates_ck_settings', array());
-        $display_text = !empty($settings['display_text']) 
-            ? $settings['display_text'] 
-            : __('Estimated Delivery Date:', 'ed-dates-ck');
-        ?>
-        <div class="ed-dates-ck-delivery-date">
-            <span class="ed-dates-ck-label"><?php echo esc_html($display_text); ?></span>
-            <span class="ed-dates-ck-date"><?php echo esc_html($delivery_date); ?></span>
-        </div>
-        <?php
+        try {
+            if (!is_string($delivery_date)) {
+                error_log('ED Dates CK - Error: Invalid delivery date format');
+                return;
+            }
+
+            $settings = get_option('ed_dates_ck_settings', array());
+            $display_text = !empty($settings['display_text']) 
+                ? $settings['display_text'] 
+                : __('Estimated Delivery Date:', 'ed-dates-ck');
+            ?>
+            <div class="ed-dates-ck-delivery-date">
+                <span class="ed-dates-ck-label"><?php echo esc_html($display_text); ?></span>
+                <span class="ed-dates-ck-date"><?php echo esc_html($delivery_date); ?></span>
+            </div>
+            <?php
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error rendering delivery date: ' . $e->getMessage());
+        }
     }
 } 

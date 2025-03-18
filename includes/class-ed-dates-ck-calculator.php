@@ -61,10 +61,10 @@ class ED_Dates_CK_Calculator {
         
         // Add product lead time
         if ($product_id) {
-            $min_lead_time = get_post_meta($product_id, '_ed_dates_ck_min_lead_time', true);
-            $max_lead_time = get_post_meta($product_id, '_ed_dates_ck_max_lead_time', true);
+            $min_lead_time = absint(get_post_meta($product_id, '_ed_dates_ck_min_lead_time', true));
+            $max_lead_time = absint(get_post_meta($product_id, '_ed_dates_ck_max_lead_time', true));
             
-            if ($min_lead_time && $max_lead_time) {
+            if ($min_lead_time > 0 && $max_lead_time >= $min_lead_time) {
                 $days += rand($min_lead_time, $max_lead_time);
             }
         }
@@ -73,64 +73,102 @@ class ED_Dates_CK_Calculator {
         $shipping_methods = get_option('ed_dates_ck_shipping_methods', array());
         $chosen_method = WC()->session ? WC()->session->get('chosen_shipping_methods') : array();
         
-        if ($chosen_method && isset($shipping_methods[$chosen_method[0]])) {
+        if (is_array($chosen_method) && !empty($chosen_method) && isset($shipping_methods[$chosen_method[0]])) {
             $method_settings = $shipping_methods[$chosen_method[0]];
-            $days += rand($method_settings['min_days'], $method_settings['max_days']);
+            if (isset($method_settings['min_days']) && isset($method_settings['max_days'])) {
+                $min_days = absint($method_settings['min_days']);
+                $max_days = absint($method_settings['max_days']);
+                if ($min_days > 0 && $max_days >= $min_days) {
+                    $days += rand($min_days, $max_days);
+                }
+            }
         }
         
-        return $days;
+        return absint($days);
     }
 
     /**
      * Add business days to date
      */
     private function add_business_days($date, $days) {
-        $date = clone $date;
-        
-        while ($days > 0) {
-            $date->modify('+1 day');
+        try {
+            $date = clone $date;
+            $days = absint($days);
             
-            if (!$this->is_closed_day($date)) {
-                $days--;
+            while ($days > 0) {
+                $date->modify('+1 day');
+                
+                if (!$this->is_closed_day($date)) {
+                    $days--;
+                }
             }
+            
+            return $date;
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error adding business days: ' . $e->getMessage());
+            return new DateTime();
         }
-        
-        return $date;
     }
 
     /**
      * Check if a date is a closed day
      */
     private function is_closed_day($date) {
-        // Check shop closed days
-        $closed_days = get_option('ed_dates_ck_shop_closed_days', array('sunday'));
-        $day_name = strtolower($date->format('l'));
-        
-        if (in_array($day_name, $closed_days)) {
-            return true;
+        if (!($date instanceof DateTime)) {
+            return false;
         }
-        
-        // Check shop holidays
-        $shop_holidays = get_option('ed_dates_ck_shop_holidays', array());
-        $date_string = $date->format('Y-m-d');
-        
-        if (in_array($date_string, $shop_holidays)) {
-            return true;
+
+        try {
+            // Check shop closed days
+            $closed_days = get_option('ed_dates_ck_shop_closed_days', array('sunday'));
+            if (!is_array($closed_days)) {
+                $closed_days = array('sunday');
+            }
+            $day_name = strtolower($date->format('l'));
+            
+            if (in_array($day_name, $closed_days)) {
+                return true;
+            }
+            
+            // Check shop holidays
+            $shop_holidays = get_option('ed_dates_ck_shop_holidays', array());
+            if (!is_array($shop_holidays)) {
+                $shop_holidays = array();
+            }
+            $date_string = $date->format('Y-m-d');
+            
+            if (in_array($date_string, $shop_holidays)) {
+                return true;
+            }
+            
+            // Check postage holidays
+            $postage_holidays = get_option('ed_dates_ck_postage_holidays', array());
+            if (!is_array($postage_holidays)) {
+                $postage_holidays = array();
+            }
+            if (in_array($date_string, $postage_holidays)) {
+                return true;
+            }
+            
+            return false;
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error checking closed day: ' . $e->getMessage());
+            return false;
         }
-        
-        // Check postage holidays
-        $postage_holidays = get_option('ed_dates_ck_postage_holidays', array());
-        if (in_array($date_string, $postage_holidays)) {
-            return true;
-        }
-        
-        return false;
     }
 
     /**
      * Format delivery date for display
      */
     private function format_delivery_date($date) {
-        return apply_filters('ed_dates_ck_date_format', $date->format('l, F j, Y'));
+        try {
+            if (!($date instanceof DateTime)) {
+                return '';
+            }
+            return apply_filters('ed_dates_ck_date_format', $date->format('l, F j, Y'));
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error formatting date: ' . $e->getMessage());
+            return '';
+        }
     }
 } 
