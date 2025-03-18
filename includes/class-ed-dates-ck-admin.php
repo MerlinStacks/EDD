@@ -646,14 +646,12 @@ class ED_Dates_CK_Admin {
         $methods = $zone->get_shipping_methods();
         ob_start();
         ?>
-        <div class="ed-dates-ck-method-items">
-            <?php foreach ($methods as $method) : ?>
-                <div class="ed-dates-ck-method-item" data-method-id="<?php echo esc_attr($method->id); ?>">
-                    <div class="ed-dates-ck-method-title"><?php echo esc_html($method->get_title()); ?></div>
-                    <div class="ed-dates-ck-method-type"><?php echo esc_html($method->get_method_title()); ?></div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <?php foreach ($methods as $method) : ?>
+            <div class="ed-dates-ck-method-item" data-method-id="<?php echo esc_attr($method->id); ?>">
+                <div class="ed-dates-ck-method-title"><?php echo esc_html($method->get_title()); ?></div>
+                <div class="ed-dates-ck-method-type"><?php echo esc_html($method->get_method_title()); ?></div>
+            </div>
+        <?php endforeach; ?>
         <?php
         $html = ob_get_clean();
 
