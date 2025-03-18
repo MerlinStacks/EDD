@@ -22,6 +22,7 @@ if (!defined('ABSPATH')) {
 define('ED_DATES_CK_VERSION', '1.0.6');
 define('ED_DATES_CK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('ED_DATES_CK_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('ED_DATES_CK_PLUGIN_PATH', __DIR__);
 
 // Check if WooCommerce is active
 if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
@@ -49,62 +50,12 @@ function ed_dates_ck_woocommerce_missing_notice() {
     <?php
 }
 
-/**
- * Register blocks
- */
-function ed_dates_ck_register_blocks() {
-    if (!function_exists('register_block_type')) {
-        return;
-    }
-
-    // Register the script
-    wp_register_script(
-        'ed-dates-ck-blocks-editor',
-        ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.js',
-        array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n', 'wp-data'),
-        ED_DATES_CK_VERSION
-    );
-
-    // Register the block
-    register_block_type('ed-dates-ck/estimated-delivery', array(
-        'editor_script' => 'ed-dates-ck-blocks-editor',
-        'render_callback' => 'ed_dates_ck_render_delivery_block',
-        'attributes' => array(
-            'className' => array(
-                'type' => 'string',
-                'default' => ''
-            )
-        )
-    ));
-}
-add_action('init', 'ed_dates_ck_register_blocks');
-
-/**
- * Render delivery block
- */
-function ed_dates_ck_render_delivery_block($attributes) {
-    if (!class_exists('ED_Dates_CK_Calculator')) {
-        return '';
-    }
-
-    $calculator = ED_Dates_CK_Calculator::get_instance();
-    $delivery_date = $calculator->calculate_estimated_delivery(get_the_ID());
-    
-    ob_start();
-    ?>
-    <div class="ed-dates-ck-block">
-        <h3><?php echo esc_html__('Estimated Delivery Date', 'ed-dates-ck'); ?></h3>
-        <p><?php echo esc_html($delivery_date); ?></p>
-    </div>
-    <?php
-    return ob_get_clean();
-}
-
 // Include required files
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck.php';
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-admin.php';
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-product.php';
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-calculator.php';
+require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-blocks.php';
 
 /**
  * Initialize the plugin

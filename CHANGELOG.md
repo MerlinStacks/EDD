@@ -4,6 +4,14 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2024-03-18
+### Fixed
+- Block editor integration completely rebuilt for better compatibility
+- Added proper block registration and rendering class
+- Fixed block preview in product editor
+- Added proper block styles and warning messages
+- Improved block build process and file organization
+
 ## [1.0.6] - 2024-03-18
 ### Changed
 - Improved holiday date picker to support true multiple date selection

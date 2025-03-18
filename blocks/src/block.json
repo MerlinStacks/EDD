@@ -1,14 +1,24 @@
 {
+    "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 2,
     "name": "ed-dates-ck/estimated-delivery",
+    "version": "1.0.6",
     "title": "Estimated Delivery Date",
     "category": "woocommerce",
     "icon": "calendar-alt",
     "description": "Display estimated delivery date for the current product.",
+    "keywords": ["delivery", "date", "estimate", "shipping"],
     "supports": {
         "html": false,
         "align": ["wide", "full"]
     },
     "textdomain": "ed-dates-ck",
-    "editorScript": "file:./index.js"
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "attributes": {
+        "className": {
+            "type": "string",
+            "default": ""
+        }
+    }
 } 
