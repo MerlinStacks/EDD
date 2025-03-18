@@ -9,14 +9,13 @@
     "lint:js": "wp-scripts lint-js",
     "packages-update": "wp-scripts packages-update"
   },
-  "author": "CustomKings",
+  "author": "",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
     "@wordpress/scripts": "^26.19.0",
-    "@wordpress/icons": "^9.38.0",
-    "@wordpress/components": "^25.13.0",
-    "@wordpress/block-editor": "^12.15.0",
-    "@wordpress/blocks": "^12.24.0",
-    "@wordpress/i18n": "^4.47.0"
+    "eslint": "^8.57.1",
+    "globals": "^16.0.0",
+    "typescript-eslint": "^8.26.1"
   }
-} 
+}

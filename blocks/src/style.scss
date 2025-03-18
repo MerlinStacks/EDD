@@ -1,0 +1,131 @@
+/* Styles for both frontend and editor */
+.wp-block-ed-dates-ck-estimated-delivery,
+.editor-styles-wrapper .wp-block-ed-dates-ck-estimated-delivery {
+    padding: 15px 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #fff;
+
+    /* Display styles */
+    &.ed-dates-ck-style-default {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    &.ed-dates-ck-style-compact {
+        padding: 10px;
+        background-color: #fff;
+    }
+
+    &.ed-dates-ck-style-expanded {
+        padding: 25px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    /* Border styles */
+    &.ed-dates-ck-border-left-accent {
+        border-left: 4px solid #007cba;
+    }
+
+    &.ed-dates-ck-border-full-border {
+        border: 1px solid #ddd;
+    }
+
+    /* Icon styles */
+    .ed-dates-ck-icon {
+        font-size: 24px;
+        color: #007cba;
+        line-height: 1;
+    }
+
+    &.ed-dates-ck-icon-right {
+        flex-direction: row-reverse;
+    }
+
+    /* Content styles */
+    .ed-dates-ck-content {
+        flex: 1;
+
+        .delivery-text {
+            display: inline-block;
+            font-size: 14px;
+            line-height: 1.4;
+            color: inherit;
+
+            strong {
+                font-weight: 600;
+            }
+        }
+    }
+
+    /* Editor-specific styles */
+    .block-editor-block-list__layout & {
+        &:not(.is-selected):not(.has-child-selected) {
+            border: 1px dashed #ddd;
+        }
+
+        &.is-selected,
+        &.has-child-selected {
+            border: 1px solid #007cba;
+        }
+
+        &.ed-dates-ck-style-default {
+            min-width: 250px;
+        }
+
+        &.ed-dates-ck-style-compact {
+            min-width: 200px;
+        }
+
+        &.ed-dates-ck-style-expanded {
+            min-width: 300px;
+        }
+    }
+}
+
+.ed-dates-ck-delivery-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &.is-style-outlined {
+        border: 1px solid currentColor;
+    }
+
+    .dashicons {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &.dashicons-airplane {
+            transform: rotate(-45deg);
+        }
+    }
+
+    .ed-dates-ck-delivery-text {
+        flex: 1;
+        margin: 0;
+        line-height: 1.4;
+    }
+}
+
+/* Editor Styles */
+.wp-block-ed-dates-ck-estimated-delivery {
+    .components-border-control {
+        width: 100%;
+    }
+
+    .components-font-size-picker {
+        width: 100%;
+    }
+} 
