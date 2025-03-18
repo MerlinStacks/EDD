@@ -34,7 +34,7 @@ class ED_Dates_CK {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         
         // Add estimated delivery date to product page
-        //add_action('woocommerce_before_add_to_cart_form', array($this, 'display_product_delivery_date'), 15);
+        add_action('woocommerce_before_add_to_cart_form', array($this, 'display_product_delivery_date'), 15);
         
         // Add estimated delivery date to cart
         add_action('woocommerce_after_cart_item_name', array($this, 'display_cart_delivery_date'), 10, 2);

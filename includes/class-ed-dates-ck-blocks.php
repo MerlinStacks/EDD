@@ -72,7 +72,7 @@ class ED_Dates_CK_Blocks {
         $view_script = 'blocks/build/view.js';
 
         // Register block script.
-        /*wp_register_script(
+        wp_register_script(
             'ed-dates-ck-block-editor',
             ED_DATES_CK_PLUGIN_URL . $editor_script,
             array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
@@ -118,9 +118,137 @@ class ED_Dates_CK_Blocks {
                 'render_callback' => array( $this, 'render_estimated_delivery_block' ),
                 'attributes'      => $attributes,
             )
-        ); */
+        );
+    }
+
+
+     /**
+      * Render the estimated delivery block.
+      *
+      * @param array    $attributes Block attributes.
+      * @param string   $content    Block content.
+      * @param WP_Block $block      Block instance.
+      * @return string Rendered block HTML.
+      */
+     public function render_estimated_delivery_block($attributes, $content, $block) {
+        global $product;
+
+        // Get the current product ID
+        $product_id = null;
+        
+        if (is_product()) {
+            // If we're on a product page
+            $product_id = get_the_ID();
+        } elseif (isset($block->context['postId'])) {
+            // If we're in a block context
+            $product_id = $block->context['postId'];
+        } elseif (is_object($product) && method_exists($product, 'get_id')) {
+            // If we have a global product object
+            $product_id = $product->get_id();
+        }
+
+        if (!$product_id || get_post_type($product_id) !== 'product') {
+            return '';
+        }
+
+        // Get the calculator instance
+        $calculator = ED_Dates_CK_Calculator::get_instance();
+        if (!$calculator) {
+            return '';
+        }
+
+        // Get the settings
+        $settings = get_option('ed_dates_ck_settings', array());
+        $default_lead_time = !empty($settings['default_lead_time']) ? intval($settings['default_lead_time']) : 0;
+
+        // Calculate the estimated delivery dates
+        try {
+            $delivery_dates = $calculator->calculate_delivery_range($product_id, $default_lead_time);
+            if (empty($delivery_dates)) {
+                return '';
+            }
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error calculating delivery date: ' . $e->getMessage());
+            return '';
+        }
+
+        // Format the delivery date based on settings
+        $date_format = isset($attributes['dateFormat']) ? $attributes['dateFormat'] : 'range';
+        $formatted_date = '';
+
+        if ($date_format === 'range' && isset($delivery_dates['start']) && isset($delivery_dates['end'])) {
+            $formatted_date = sprintf(
+                '%s - %s',
+                date_i18n('F j', strtotime($delivery_dates['start'])),
+                date_i18n('F j', strtotime($delivery_dates['end']))
+            );
+        } else {
+            // Use the latest date for 'latest' format
+            $formatted_date = sprintf(
+                __('Delivery by %s', 'ed-dates-ck'),
+                date_i18n('jS \o\f F', strtotime($delivery_dates['end']))
+            );
+        }
+
+        // Extract attributes with defaults
+        $show_icon = isset($attributes['showIcon']) ? $attributes['showIcon'] : true;
+        $icon_position = isset($attributes['iconPosition']) ? $attributes['iconPosition'] : 'left';
+        $display_style = isset($attributes['displayStyle']) ? $attributes['displayStyle'] : 'default';
+        $border_style = isset($attributes['borderStyle']) ? $attributes['borderStyle'] : 'left-accent';
+        $class_name = isset($attributes['className']) ? $attributes['className'] : '';
+
+        // Build classes
+        $classes = array(
+            'wp-block-ed-dates-ck-estimated-delivery',
+            'ed-dates-ck-block',
+            "ed-dates-ck-style-{$display_style}",
+            "ed-dates-ck-border-{$border_style}",
+            "ed-dates-ck-icon-{$icon_position}",
+            $class_name
+        );
+
+        // Build inline styles
+        $styles = array();
+        if (!empty($attributes['textColor'])) {
+            $styles[] = sprintf('color: %s;', esc_attr($attributes['textColor']));
+        }
+        if (!empty($attributes['backgroundColor'])) {
+            $styles[] = sprintf('background-color: %s;', esc_attr($attributes['backgroundColor']));
+        }
+        if (!empty($attributes['fontSize'])) {
+            $styles[] = sprintf('font-size: %s;', esc_attr($attributes['fontSize']));
+        }
+        if (!empty($attributes['style'])) {
+            if (!empty($attributes['style']['spacing']['padding'])) {
+                $styles[] = sprintf('padding: %s;', esc_attr($attributes['style']['spacing']['padding']));
+            }
+            if (!empty($attributes['style']['spacing']['margin'])) {
+                $styles[] = sprintf('margin: %s;', esc_attr($attributes['style']['spacing']['margin']));
+            }
+        }
+
+        // Start output buffering
+        ob_start();
+        ?>
+        <div class="<?php echo esc_attr(implode(' ', $classes)); ?>"
+             <?php echo !empty($styles) ? sprintf('style="%s"', esc_attr(implode(' ', $styles))) : ''; ?>>
+            <?php if ($show_icon && $icon_position === 'left') : ?>
+                <span class="ed-dates-ck-icon dashicons dashicons-calendar-alt"></span>
+            <?php endif; ?>
+
+            <div class="ed-dates-ck-content">
+                <h3><?php echo esc_html__('Estimated Delivery', 'ed-dates-ck'); ?></h3>
+                <p class="delivery-date"><?php echo esc_html($formatted_date); ?></p>
+            </div>
+
+            <?php if ($show_icon && $icon_position === 'right') : ?>
+                <span class="ed-dates-ck-icon dashicons dashicons-calendar-alt"></span>
+            <?php endif; ?>
+        </div>
+        <?php
+        return ob_get_clean();
     }
 }
 
 // Initialize the blocks class.
-//ED_Dates_CK_Blocks::get_instance();
+ED_Dates_CK_Blocks::get_instance();
