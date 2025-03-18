@@ -1,17 +1,19 @@
 <?php
 /**
  * Plugin Name: ED Dates CK
- * Plugin URI: https://customkings.com.au
- * Description: A WooCommerce plugin that displays estimated delivery dates on product, cart, and checkout pages.
- * Version: 1.0.11
- * Author: CustomKings Personalised Gifts
- * Author URI: https://customkings.com.au
+ * Plugin URI: https://customkings.com/
+ * Description: Display estimated delivery dates on product, cart, and checkout pages.
+ * Version: 1.0.12
+ * Author: CustomKings
+ * Author URI: https://customkings.com/
  * Text Domain: ed-dates-ck
  * Domain Path: /languages
- * Requires at least: 5.8
+ * Requires at least: 6.0
  * Requires PHP: 7.4
- * WC requires at least: 5.0
- * WC tested up to: 8.0
+ * WC requires at least: 7.0
+ * WC tested up to: 8.6
+ *
+ * @package ED_Dates_CK
  */
 
 if (!defined('ABSPATH')) {
@@ -19,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('ED_DATES_CK_VERSION', '1.0.11');
+define('ED_DATES_CK_VERSION', '1.0.12');
 define('ED_DATES_CK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('ED_DATES_CK_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ED_DATES_CK_PLUGIN_PATH', __DIR__);

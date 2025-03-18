@@ -47,21 +47,45 @@ class ED_Dates_CK_Blocks {
      * Register blocks.
      */
     public function register_blocks() {
-        // Check if Gutenberg is active.
-        if ( ! function_exists( 'register_block_type' ) ) {
-            return;
-        }
+        // Register block script
+        wp_register_script(
+            'ed-dates-ck-block-editor',
+            ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.js',
+            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+            ED_DATES_CK_VERSION
+        );
 
-        // Register the block using metadata from block.json
-        $block_json_path = ED_DATES_CK_PLUGIN_PATH . '/blocks/src/block.json';
-        if ( ! file_exists( $block_json_path ) ) {
-            error_log( 'ED Dates CK - Block JSON file not found: ' . $block_json_path );
-            return;
-        }
+        // Register block styles
+        wp_register_style(
+            'ed-dates-ck-block-editor',
+            ED_DATES_CK_PLUGIN_URL . 'blocks/build/index.css',
+            array('wp-edit-blocks'),
+            ED_DATES_CK_VERSION
+        );
+
+        wp_register_style(
+            'ed-dates-ck-block-style',
+            ED_DATES_CK_PLUGIN_URL . 'blocks/build/style-index.css',
+            array(),
+            ED_DATES_CK_VERSION
+        );
+
+        // Register block view script
+        wp_register_script(
+            'ed-dates-ck-block-view',
+            ED_DATES_CK_PLUGIN_URL . 'blocks/build/view.js',
+            array(),
+            ED_DATES_CK_VERSION,
+            true
+        );
 
         register_block_type(
-            ED_DATES_CK_PLUGIN_PATH . '/blocks/src',
+            ED_DATES_CK_PLUGIN_PATH . 'blocks/build',
             array(
+                'editor_script' => 'ed-dates-ck-block-editor',
+                'editor_style' => 'ed-dates-ck-block-editor',
+                'style' => 'ed-dates-ck-block-style',
+                'view_script' => 'ed-dates-ck-block-view',
                 'render_callback' => array($this, 'render_estimated_delivery_block'),
                 'attributes' => array(
                     'showIcon' => array(
@@ -79,6 +103,10 @@ class ED_Dates_CK_Blocks {
                     'borderStyle' => array(
                         'type' => 'string',
                         'default' => 'left-accent'
+                    ),
+                    'dateFormat' => array(
+                        'type' => 'string',
+                        'default' => 'range'
                     ),
                     'className' => array(
                         'type' => 'string'
@@ -98,6 +126,9 @@ class ED_Dates_CK_Blocks {
                 )
             )
         );
+
+        // Enqueue dashicons for the calendar icon
+        wp_enqueue_style('dashicons');
     }
 
     /**
@@ -186,42 +217,47 @@ class ED_Dates_CK_Blocks {
             $product_id = $product->get_id();
         }
 
-        // Debug output
-        if (WP_DEBUG) {
-            error_log('ED Dates CK - Debug Info:');
-            error_log('Product ID: ' . print_r($product_id, true));
-            error_log('Is Product: ' . (is_product() ? 'yes' : 'no'));
-            error_log('Post Type: ' . get_post_type($product_id));
-        }
-
         if (!$product_id || get_post_type($product_id) !== 'product') {
-            if (WP_DEBUG) {
-                error_log('ED Dates CK - Invalid product ID or not a product');
-            }
             return '';
         }
 
         // Get the calculator instance
         $calculator = ED_Dates_CK_Calculator::get_instance();
         if (!$calculator) {
-            if (WP_DEBUG) {
-                error_log('ED Dates CK - Calculator instance not found');
-            }
             return '';
         }
 
-        // Calculate the estimated delivery date
+        // Get the settings
+        $settings = get_option('ed_dates_ck_settings', array());
+        $default_lead_time = !empty($settings['default_lead_time']) ? intval($settings['default_lead_time']) : 0;
+
+        // Calculate the estimated delivery dates
         try {
-            $delivery_date = $calculator->calculate_estimated_delivery($product_id);
-            if (!$delivery_date) {
-                if (WP_DEBUG) {
-                    error_log('ED Dates CK - No delivery date calculated');
-                }
+            $delivery_dates = $calculator->calculate_delivery_range($product_id, $default_lead_time);
+            if (empty($delivery_dates)) {
                 return '';
             }
         } catch (Exception $e) {
             error_log('ED Dates CK - Error calculating delivery date: ' . $e->getMessage());
             return '';
+        }
+
+        // Format the delivery date based on settings
+        $date_format = isset($attributes['dateFormat']) ? $attributes['dateFormat'] : 'range';
+        $formatted_date = '';
+
+        if ($date_format === 'range' && isset($delivery_dates['start']) && isset($delivery_dates['end'])) {
+            $formatted_date = sprintf(
+                '%s - %s',
+                date_i18n('F j', strtotime($delivery_dates['start'])),
+                date_i18n('F j', strtotime($delivery_dates['end']))
+            );
+        } else {
+            // Use the latest date for 'latest' format
+            $formatted_date = sprintf(
+                __('Delivery by %s', 'ed-dates-ck'),
+                date_i18n('jS \o\f F', strtotime($delivery_dates['end']))
+            );
         }
 
         // Extract attributes with defaults
@@ -272,7 +308,7 @@ class ED_Dates_CK_Blocks {
 
             <div class="ed-dates-ck-content">
                 <h3><?php echo esc_html__('Estimated Delivery', 'ed-dates-ck'); ?></h3>
-                <p class="delivery-date"><?php echo esc_html($delivery_date); ?></p>
+                <p class="delivery-date"><?php echo esc_html($formatted_date); ?></p>
             </div>
 
             <?php if ($show_icon && $icon_position === 'right') : ?>

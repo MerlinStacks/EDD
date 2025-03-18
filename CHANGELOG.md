@@ -4,6 +4,47 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.13] - 2024-03-18
+### Added
+- New step-by-step shipping methods configuration interface
+- Dynamic loading of shipping methods based on zone selection
+- Live preview of settings changes
+- Tooltips for better user guidance
+- Improved holiday date picker with better UX
+- AJAX-based settings saving with instant feedback
+
+### Changed
+- Completely redesigned shipping methods tab with modern UI
+- Enhanced admin interface with cleaner styling
+- Improved responsive design for all screen sizes
+- Better organization of shipping method settings
+- Updated holiday date picker with improved selection UI
+
+### Fixed
+- Holiday date picker selection issues
+- Settings not saving immediately
+- UI inconsistencies in shipping methods tab
+- Mobile layout issues in admin interface
+
+## [1.0.12] - 2024-03-18
+### Added
+- New delivery date format options (range or latest date)
+- Default lead time setting in admin panel
+- Live preview of delivery date format in settings
+- Enhanced date range calculation for more accurate estimates
+- Improved block styling and frontend rendering
+
+### Changed
+- Updated block registration to properly handle frontend styles
+- Improved delivery date calculator to support date ranges
+- Enhanced admin settings interface with preview section
+- Better handling of lead times and transit times
+
+### Fixed
+- Block styles not updating on frontend
+- Style inconsistencies between editor and frontend
+- Asset loading and dependency management
+
 ## [1.0.11] - 2024-03-18
 ### Fixed
 - Completely rebuilt block editor integration for better compatibility and reliability
@@ -11,12 +52,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved block editor preview and controls
 - Added proper asset dependency management
 - Enhanced block styling with responsive design and dark mode support
+- Fixed frontend block rendering and visibility issues
 
 ### Added
 - New block customization options (icon position, display styles, border styles)
 - RTL language support for block layout
 - Proper error handling for block registration and rendering
+- Frontend JavaScript support for dynamic updates
 - Comprehensive documentation in README.md
+
+### Changed
+- Updated block.json configuration for better asset loading
+- Improved block rendering with better error handling
+- Enhanced block styles for better visual consistency
+- Separated editor and frontend styles for optimal loading
 
 ## [1.0.10] - 2024-03-18
 ### Fixed

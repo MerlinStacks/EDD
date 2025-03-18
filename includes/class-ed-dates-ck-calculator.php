@@ -32,6 +32,31 @@ class ED_Dates_CK_Calculator {
     }
 
     /**
+     * Calculate delivery date range
+     */
+    public function calculate_delivery_range($product_id = null, $default_lead_time = 0) {
+        try {
+            $start_date = $this->get_start_date();
+            $total_days = $this->calculate_total_days($product_id, $default_lead_time);
+            
+            if (!is_array($total_days)) {
+                return array();
+            }
+
+            $earliest_delivery = $this->add_business_days($start_date, $total_days['min']);
+            $latest_delivery = $this->add_business_days($start_date, $total_days['max']);
+            
+            return array(
+                'start' => $earliest_delivery->format('Y-m-d'),
+                'end' => $latest_delivery->format('Y-m-d')
+            );
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error calculating delivery range: ' . $e->getMessage());
+            return array();
+        }
+    }
+
+    /**
      * Get start date based on order cutoff time
      */
     private function get_start_date() {
@@ -56,35 +81,57 @@ class ED_Dates_CK_Calculator {
     /**
      * Calculate total days needed for delivery
      */
-    private function calculate_total_days($product_id = null) {
-        $days = 0;
-        
-        // Add product lead time
-        if ($product_id) {
-            $min_lead_time = absint(get_post_meta($product_id, '_ed_dates_ck_min_lead_time', true));
-            $max_lead_time = absint(get_post_meta($product_id, '_ed_dates_ck_max_lead_time', true));
-            
-            if ($min_lead_time > 0 && $max_lead_time >= $min_lead_time) {
-                $days += rand($min_lead_time, $max_lead_time);
+    private function calculate_total_days($product_id = null, $default_lead_time = 0) {
+        try {
+            // Get lead time
+            $lead_time = $this->get_lead_time($product_id, $default_lead_time);
+            if ($lead_time === false) {
+                return false;
             }
+
+            // Get shipping method transit times
+            $transit_times = $this->get_transit_times();
+            if (empty($transit_times)) {
+                return false;
+            }
+
+            // Calculate min and max transit times
+            $min_transit = PHP_INT_MAX;
+            $max_transit = 0;
+            foreach ($transit_times as $transit_time) {
+                $transit_days = intval($transit_time);
+                $min_transit = min($min_transit, $transit_days);
+                $max_transit = max($max_transit, $transit_days);
+            }
+
+            // Return range
+            return array(
+                'min' => $lead_time + $min_transit,
+                'max' => $lead_time + $max_transit
+            );
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error calculating total days: ' . $e->getMessage());
+            return false;
         }
-        
-        // Add shipping method transit time
-        $shipping_methods = get_option('ed_dates_ck_shipping_methods', array());
-        $chosen_method = WC()->session ? WC()->session->get('chosen_shipping_methods') : array();
-        
-        if (is_array($chosen_method) && !empty($chosen_method) && isset($shipping_methods[$chosen_method[0]])) {
-            $method_settings = $shipping_methods[$chosen_method[0]];
-            if (isset($method_settings['min_days']) && isset($method_settings['max_days'])) {
-                $min_days = absint($method_settings['min_days']);
-                $max_days = absint($method_settings['max_days']);
-                if ($min_days > 0 && $max_days >= $min_days) {
-                    $days += rand($min_days, $max_days);
+    }
+
+    /**
+     * Get lead time for a product
+     */
+    private function get_lead_time($product_id = null, $default_lead_time = 0) {
+        try {
+            if ($product_id) {
+                $product_lead_time = get_post_meta($product_id, '_ed_dates_ck_lead_time', true);
+                if ($product_lead_time !== '') {
+                    return intval($product_lead_time);
                 }
             }
+            
+            return $default_lead_time;
+        } catch (Exception $e) {
+            error_log('ED Dates CK - Error getting lead time: ' . $e->getMessage());
+            return false;
         }
-        
-        return absint($days);
     }
 
     /**
