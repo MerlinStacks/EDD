@@ -154,40 +154,8 @@ class ED_Dates_CK_Blocks {
             return ob_get_clean();
         } catch (Exception $e) {
             error_log('ED Dates CK - Error rendering block: ' . $e->getMessage());
-    public function render_estimated_delivery_block( $attributes, $content ) {
-        // Get the current product ID.
-        $product_id = get_the_ID();
-        if ( ! $product_id || get_post_type( $product_id ) !== 'product' ) {
             return '';
         }
-
-        // Get the calculator instance.
-        $calculator = ED_Dates_CK_Calculator::get_instance();
-        
-        // Calculate the estimated delivery date.
-        $delivery_date = $calculator->calculate_estimated_delivery( $product_id );
-        
-        if ( ! $delivery_date ) {
-            return '';
-        }
-
-        // Format the date.
-        $formatted_date = $calculator->format_delivery_date( $delivery_date );
-
-        // Build the HTML.
-        $wrapper_class = 'ed-dates-ck-block';
-        if ( ! empty( $attributes['className'] ) ) {
-            $wrapper_class .= ' ' . esc_attr( $attributes['className'] );
-        }
-
-        ob_start();
-        ?>
-        <div class="<?php echo esc_attr( $wrapper_class ); ?>">
-            <h3><?php esc_html_e( 'Estimated Delivery Date', 'ed-dates-ck' ); ?></h3>
-            <p><?php echo esc_html( $formatted_date ); ?></p>
-        </div>
-        <?php
-        return ob_get_clean();
     }
 }
 
