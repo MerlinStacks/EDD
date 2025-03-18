@@ -1,0 +1,65 @@
+.ed-dates-ck-delivery-date {
+    margin: 1em 0;
+    padding: 0.75em 1em;
+    background-color: #f7f7f7;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.ed-dates-ck-delivery-date .ed-dates-ck-label {
+    font-weight: 600;
+    margin-right: 0.5em;
+}
+
+.ed-dates-ck-delivery-date .ed-dates-ck-date {
+    color: #2c3338;
+}
+
+/* Cart and checkout specific styles */
+.woocommerce-cart .ed-dates-ck-delivery-date,
+.woocommerce-checkout .ed-dates-ck-delivery-date {
+    margin: 0.5em 0;
+    padding: 0.5em 0.75em;
+    font-size: 0.85em;
+    background-color: transparent;
+    border: none;
+    border-left: 3px solid #e5e5e5;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .ed-dates-ck-delivery-date {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .ed-dates-ck-delivery-date .ed-dates-ck-date {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .woocommerce-cart .ed-dates-ck-delivery-date,
+    .woocommerce-checkout .ed-dates-ck-delivery-date {
+        border-left-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* RTL support */
+.rtl .ed-dates-ck-delivery-date .ed-dates-ck-label {
+    margin-right: 0;
+    margin-left: 0.5em;
+}
+
+.rtl.woocommerce-cart .ed-dates-ck-delivery-date,
+.rtl.woocommerce-checkout .ed-dates-ck-delivery-date {
+    border-left: none;
+    border-right: 3px solid #e5e5e5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rtl.woocommerce-cart .ed-dates-ck-delivery-date,
+    .rtl.woocommerce-checkout .ed-dates-ck-delivery-date {
+        border-right-color: rgba(255, 255, 255, 0.1);
+    }
+} 

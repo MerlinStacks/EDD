@@ -1,0 +1,14 @@
+{
+    "apiVersion": 2,
+    "name": "ed-dates-ck/estimated-delivery",
+    "title": "Estimated Delivery Date",
+    "category": "woocommerce",
+    "icon": "calendar-alt",
+    "description": "Display estimated delivery date for the current product.",
+    "supports": {
+        "html": false,
+        "align": ["wide", "full"]
+    },
+    "textdomain": "ed-dates-ck",
+    "editorScript": "file:./index.js"
+} 
