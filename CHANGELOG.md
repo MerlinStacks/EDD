@@ -4,6 +4,12 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.24] - 2025-03-19
+### Fixed
+- Re-added the estimated delivery date block to the product page, and removed the duplicate display caused by the hook.
+- Consolidated block styles to use a single stylesheet for both editor and frontend.
+- Centered the block icon vertically using flexbox.
+
 ## [1.0.23] - 2025-03-19
 ### Added
 - Added the estimated delivery date block back to the product page.

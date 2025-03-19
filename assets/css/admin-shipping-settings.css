@@ -43,17 +43,20 @@
     clear: both;
 }
 
+.ed-dates-ck-shipping-methods {
+  width: 100%; /* Explicit width */
+}
+
 /* Three-column layout using float */
 .ed-dates-ck-step {
     width: 33.33%;
     float: left;
-    box-sizing: border-box;
-    padding-right: 20px; /* Add some padding to create spacing */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
-/* Remove padding from the last column to prevent overflow */
-.ed-dates-ck-step:last-child {
-  padding-right: 0;
+/* Add margin to create spacing, except for the last element */
+.ed-dates-ck-step:not(:last-child) {
+  margin-right: 20px;
 }
 
 .ed-dates-ck-step {
