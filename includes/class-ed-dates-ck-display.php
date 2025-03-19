@@ -31,7 +31,7 @@ class ED_Dates_CK_Display {
      */
     private function init_hooks() {
         // Add delivery date display to product page
-        add_action('woocommerce_before_add_to_cart_form', array($this, 'display_estimated_delivery'));
+        //add_action('woocommerce_before_add_to_cart_form', array($this, 'display_estimated_delivery'));
         
         // Add delivery date display to cart and checkout
         add_action('woocommerce_after_cart_item_name', array($this, 'display_cart_estimated_delivery'), 10, 2);

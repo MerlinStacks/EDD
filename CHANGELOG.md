@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.27] - 2025-03-19
 ### Fixed
-- Reverted to using separate enqueue functions for editor and front-end assets.
+- Reverted to using separate enqueue functions for editor and frontend assets.
 - Updated `block.json` to correctly reference `style-style.css`.
 
 ## [1.0.26] - 2025-03-19

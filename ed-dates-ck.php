@@ -58,6 +58,7 @@ require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-admin.php';
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-product.php';
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-calculator.php';
 require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-blocks.php';
+require_once ED_DATES_CK_PLUGIN_DIR . 'includes/class-ed-dates-ck-display.php';
 
 /**
  * Initialize the plugin
@@ -76,6 +77,7 @@ function ed_dates_ck_init() {
 
     // Initialize blocks class
      ED_Dates_CK_Blocks::get_instance();
+     ED_Dates_CK_Display::get_instance();
 }
 add_action('plugins_loaded', 'ed_dates_ck_init');
 
