@@ -191,24 +191,24 @@ class ED_Dates_CK_Blocks {
         );
 
         // Build inline styles
-        $styles = array();
-        if (!empty($attributes['textColor'])) {
-            $styles[] = sprintf('color: %s;', esc_attr($attributes['textColor']));
-        }
-        if (!empty($attributes['backgroundColor'])) {
-            $styles[] = sprintf('background-color: %s;', esc_attr($attributes['backgroundColor']));
-        }
-        if (!empty($attributes['fontSize'])) {
-            $styles[] = sprintf('font-size: %s;', esc_attr($attributes['fontSize']));
-        }
-        if (!empty($attributes['style'])) {
-            if (!empty($attributes['style']['spacing']['padding'])) {
-                $styles[] = sprintf('padding: %s;', esc_attr($attributes['style']['spacing']['padding']));
-            }
-            if (!empty($attributes['style']['spacing']['margin'])) {
-                $styles[] = sprintf('margin: %s;', esc_attr($attributes['style']['spacing']['margin']));
-            }
-        }
+$styles = array();
+if (!empty($attributes['textColor'])) {
+    $styles[] = sprintf('color: %s;', esc_attr($attributes['textColor']));
+}
+if (!empty($attributes['backgroundColor'])) {
+    $styles[] = sprintf('background-color: %s;', esc_attr($attributes['backgroundColor']));
+}
+if (!empty($attributes['fontSize'])) {
+    $styles[] = sprintf('font-size: %s;', esc_attr($attributes['fontSize']));
+}
+if (!empty($attributes['style'])) {
+    if (!empty($attributes['style']['spacing']['padding'])) {
+        $styles[] = sprintf('padding: %s;', esc_attr($attributes['style']['spacing']['padding']));
+    }
+    if (!empty($attributes['style']['spacing']['margin'])) {
+        $styles[] = sprintf('margin: %s;', esc_attr($attributes['style']['spacing']['margin']));
+    }
+}
 
         // Start output buffering
         ob_start();

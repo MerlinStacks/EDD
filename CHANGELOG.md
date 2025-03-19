@@ -4,6 +4,11 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.26] - 2025-03-19
+### Fixed
+- Corrected the handling of the `style` attribute in the block's `render_estimated_delivery_block` function to prevent invalid inline styles.
+- Updated `block.json` to correctly reference `style-style.css`.
+
 ## [1.0.25] - 2025-03-19
 ### Fixed
 - Fixed block styles not being applied correctly on the frontend. Ensured the correct stylesheet is referenced in `block.json`.
