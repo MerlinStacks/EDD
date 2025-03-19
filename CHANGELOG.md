@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Corrected the handling of the `style` attribute in the block's `render_estimated_delivery_block` function to prevent invalid inline styles.
 - Updated `block.json` to correctly reference `style-style.css`.
+- Re-added enqueue functions for editor and front-end assets.
 
 ## [1.0.25] - 2025-03-19
 ### Fixed
