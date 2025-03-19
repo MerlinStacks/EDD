@@ -4,6 +4,10 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.28] - 2025-03-19
+### Fixed
+- Removed the `ED_Dates_CK_Display` class and its associated hook to prevent duplicate delivery date displays on the product page. The block is now the only method used to display the delivery date.
+
 ## [1.0.27] - 2025-03-19
 ### Fixed
 - Reverted to using separate enqueue functions for editor and frontend assets.
