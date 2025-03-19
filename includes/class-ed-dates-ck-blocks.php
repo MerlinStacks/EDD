@@ -39,24 +39,7 @@ class ED_Dates_CK_Blocks {
      */
     public function __construct() {
         add_action( 'init', array( $this, 'register_blocks' ) );
-        add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
     }
-
-     /**
-      * Enqueue block assets for both editor and front-end.
-      */
-     public function enqueue_block_assets() {
-         // Enqueue block styles
-         wp_enqueue_style(
-             'ed-dates-ck-block-style',
-             ED_DATES_CK_PLUGIN_URL . 'blocks/build/style-index.css',
-             array(),
-             ED_DATES_CK_VERSION
-         );
-
-         // Enqueue dashicons for the calendar icon
-         wp_enqueue_style( 'dashicons' );
-     }
 
     /**
      * Register blocks.
