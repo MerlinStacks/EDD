@@ -1,4 +1,19 @@
 # Changelog
+
+## [1.0.1] - 2024-03-20
+
+### Fixed
+- Block registration in Gutenberg editor
+- Asset loading for block editor and frontend
+- Block styles and dependencies management
+
+## [1.0.0] - 2024-03-20
+
+### Added
+- Initial release
+- Estimated delivery date block for WooCommerce products
+- Customizable block settings for appearance and formatting
+# Changelog
 All notable changes to the WooCommerce Estimated Delivery Date plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

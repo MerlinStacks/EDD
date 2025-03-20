@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Estimated Delivery Date
  * Plugin URI: #
  * Description: Display estimated delivery dates on WooCommerce product pages using a Gutenberg block.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Your Name
  * Author URI: #
  * Text Domain: wc-estimated-delivery-date
@@ -27,7 +27,7 @@ class WC_Estimated_Delivery_Date {
      *
      * @var string
      */
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
 
     /**
      * Single instance of the plugin
@@ -101,8 +101,8 @@ class WC_Estimated_Delivery_Date {
             $this->init_frontend();
         }
 
-        // Register block
-        add_action('init', [$this, 'register_block']);
+        // Register block on init with priority after WooCommerce loads
+        add_action('init', [$this, 'register_block'], 20);
     }
 
     /**
@@ -125,14 +125,59 @@ class WC_Estimated_Delivery_Date {
      * Initialize frontend
      */
     private function init_frontend() {
-        // Frontend initialization code will be added here
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
+    }
+
+    /**
+     * Enqueue frontend assets
+     */
+    public function enqueue_frontend_assets() {
+        $asset_file = include WC_EDD_PATH . 'build/frontend.asset.php';
+        
+        wp_enqueue_script(
+            'wc-edd-frontend',
+            WC_EDD_URL . 'build/frontend.js',
+            $asset_file['dependencies'],
+            $asset_file['version'],
+            true
+        );
     }
 
     /**
      * Register Gutenberg block
      */
     public function register_block() {
-        register_block_type(WC_EDD_PATH . 'build/block.json');
+        if (!function_exists('register_block_type')) {
+            return;
+        }
+
+        $asset_file = include WC_EDD_PATH . 'build/index.asset.php';
+        
+        // Register editor script
+        wp_register_script(
+            'wc-edd-editor',
+            WC_EDD_URL . 'build/index.js',
+            $asset_file['dependencies'],
+            $asset_file['version'],
+            true
+        );
+
+        // Register editor and block styles
+        wp_register_style(
+            'wc-edd-editor',
+            WC_EDD_URL . 'build/index.css',
+            [],
+            WC_EDD_VERSION
+        );
+
+        wp_register_style(
+            'wc-edd-block',
+            WC_EDD_URL . 'assets/css/frontend.css',
+            [],
+            WC_EDD_VERSION
+        );
+
+        register_block_type(WC_EDD_PATH . 'block.json');
     }
 
     /**

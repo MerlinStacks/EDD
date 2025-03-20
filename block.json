@@ -81,7 +81,7 @@
         }
     },
     "textdomain": "wc-estimated-delivery-date",
-    "editorScript": "file:./build/index.js",
-    "editorStyle": "file:./build/index.css",
-    "style": "file:./build/style-index.css"
+    "style": "wc-edd-block",
+    "editorScript": "wc-edd-editor",
+    "editorStyle": "wc-edd-editor"
 }
