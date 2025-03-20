@@ -1,127 +1,127 @@
-# ED Dates CK - WooCommerce Estimated Delivery Dates
+# WooCommerce Estimated Delivery Date
 
-A powerful WooCommerce plugin that displays estimated delivery dates on product, cart, and checkout pages. This plugin helps improve customer experience by providing accurate delivery estimates based on product lead times, shipping methods, and business operation schedules.
+Display estimated delivery dates on WooCommerce product pages using a customizable Gutenberg block.
 
-## Features
+## Description
 
-- 📅 **Smart Delivery Estimation**
-  - Calculates delivery dates based on product lead times
-  - Considers shipping method transit times
-  - Accounts for order cutoff times
-  - Respects shop closed days and holidays
+WooCommerce Estimated Delivery Date adds a customizable Gutenberg block to display estimated delivery dates on your WooCommerce product pages. The plugin calculates delivery dates based on:
 
-- 🎨 **Modern Block Editor Integration**
-  - Custom Gutenberg block for delivery dates
-  - Multiple display styles (Default, Compact, Prominent)
-  - Customizable colors and typography
-  - Flexible layout options with icon positioning
-  - Responsive design for all screen sizes
+- Default lead times
+- Product-specific lead times
+- Shipping method transit times
+- Store closed days
+- Postage closed days
 
-- ⚙️ **Advanced Admin Settings**
-  - Easy-to-use holiday management system
-  - Shop closed days configuration
-  - Order cutoff time settings
-  - Shipping method transit times
-  - Product-specific lead times
+### Features
 
-- 🛍️ **WooCommerce Integration**
-  - Seamless product page integration
-  - Cart and checkout page display
-  - Compatible with all shipping methods
-  - HPOS (High-Performance Order Storage) ready
+- Gutenberg block with extensive styling options
+- Product-specific lead times
+- Shipping method-specific transit times
+- Store and postage closed days configuration
+- Cart and checkout display options
+- Fully responsive design
+- RTL language support
+- HPOS (High-Performance Order Storage) compatible
 
-## Requirements
+### Block Customization
 
-- WordPress 5.8 or higher
-- PHP 7.4 or higher
-- WooCommerce 5.0 or higher
-- WooCommerce tested up to 8.0
+The Gutenberg block includes the following customization options:
+
+- Display type (text or date only)
+- Text alignment
+- Font size, family, and weight
+- Text and background colors
+- Margin settings
+- Border styling
+- Icon selection and positioning
 
 ## Installation
 
-1. Download the plugin zip file
-2. Go to WordPress admin > Plugins > Add New
-3. Click "Upload Plugin" and choose the downloaded file
-4. Click "Install Now" and then "Activate"
-5. Navigate to ED Dates CK in the WordPress admin menu to configure settings
+1. Upload the plugin files to `/wp-content/plugins/woocommerce-estimated-delivery-date`
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Use the Estimate DD menu to configure the plugin settings
+4. Add the "Estimated Delivery Date" block to your product pages
 
-## Configuration
+## Development
 
-### Basic Setup
+### Requirements
 
-1. **Order Cutoff Time**
-   - Set the daily cutoff time for orders
-   - Orders placed after this time will be processed the next business day
+- Node.js (v16.0.0 or later)
+- npm (v7.0.0 or later)
+- WordPress (v5.0 or later)
+- WooCommerce (v7.0 or later)
+- PHP 8.0 or later
 
-2. **Shop Schedule**
-   - Configure shop closed days (e.g., weekends)
-   - Add special holiday dates
-   - Set postage holidays separately from shop holidays
+### Setup
 
-3. **Shipping Methods**
-   - Configure transit times for each shipping method
-   - Support for zone-specific shipping methods
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/woocommerce-estimated-delivery-date.git
+```
 
-### Product Settings
+2. Install dependencies:
+```bash
+cd woocommerce-estimated-delivery-date
+npm install
+```
 
-1. **Lead Times**
-   - Set default lead times for all products
-   - Configure product-specific lead times as needed
-   - Support for variable product lead times
+3. Start development build:
+```bash
+npm start
+```
 
-### Block Editor
+4. Create production build:
+```bash
+npm run build
+```
 
-The plugin includes a custom Gutenberg block with the following customization options:
+### Filters
 
-- Display Style (Default/Compact/Prominent)
-- Border Style (Left Accent/Full Border/No Border)
-- Icon Display and Position
-- Colors and Typography
-- Spacing and Alignment
-- Dark Mode Support
-- RTL Language Support
+- `wc_edd_delivery_date_min`: Filter the minimum delivery date
+- `wc_edd_delivery_date_max`: Filter the maximum delivery date
+- `wc_edd_closed_days`: Filter the closed days array
+- `wc_edd_shipping_transit_times`: Filter shipping method transit times
 
-## Usage
+### Actions
 
-### In Product Pages
+- `wc_edd_before_calculate_dates`: Fires before delivery date calculation
+- `wc_edd_after_calculate_dates`: Fires after delivery date calculation
+- `wc_edd_delivery_date_updated`: Fires when delivery date is updated
 
-The estimated delivery date will automatically display on product pages. You can:
+### Examples
 
-1. Use the built-in Gutenberg block
-2. Add the block anywhere in your product description
-3. Customize the display to match your theme
+Add custom closed days:
+```php
+add_filter('wc_edd_closed_days', function($closed_days) {
+    $closed_days[] = strtotime('2025-12-25'); // Add Christmas
+    return $closed_days;
+});
+```
 
-### In Cart/Checkout
-
-Delivery estimates automatically show in:
-- Cart page for each item
-- Checkout page during shipping selection
-- Order confirmation page
-
-## Support
-
-For support, please:
-1. Check the [documentation](https://github.com/yourusername/ed-dates-ck/wiki)
-2. Search [existing issues](https://github.com/yourusername/ed-dates-ck/issues)
-3. Create a new issue if needed
+Modify transit times:
+```php
+add_filter('wc_edd_shipping_transit_times', function($transit_times, $method) {
+    if ($method === 'flat_rate') {
+        $transit_times['min'] = 2;
+        $transit_times['max'] = 4;
+    }
+    return $transit_times;
+}, 10, 2);
+```
 
 ## Contributing
 
-We welcome contributions! Please:
-
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+2. Create a feature branch: `git checkout -b feature/my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature/my-new-feature`
+5. Submit a pull request
 
 ## License
 
 This project is licensed under the GPL v2 or later - see the [LICENSE](LICENSE) file for details.
 
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a detailed list of changes.
-
 ## Credits
 
-Developed by [CustomKings](https://customkings.com.au) 
+- Built with the [WordPress Block Editor](https://developer.wordpress.org/block-editor/)
+- Uses [WooCommerce](https://woocommerce.com/) hooks and filters

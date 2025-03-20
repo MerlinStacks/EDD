@@ -1,0 +1,87 @@
+{
+    "apiVersion": 2,
+    "name": "wc-edd/estimated-delivery-date",
+    "version": "1.0.0",
+    "title": "Estimated Delivery Date",
+    "category": "woocommerce",
+    "description": "Displays an estimated delivery date on WooCommerce product pages.",
+    "supports": {
+        "html": false,
+        "align": true,
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "__experimentalFontFamily": true,
+            "fontWeight": true
+        },
+        "color": {
+            "text": true,
+            "background": true,
+            "gradients": false
+        }
+    },
+    "attributes": {
+        "displayType": {
+            "type": "string",
+            "default": "text"
+        },
+        "textAlign": {
+            "type": "string",
+            "default": "left"
+        },
+        "fontSize": {
+            "type": "string"
+        },
+        "textColor": {
+            "type": "string"
+        },
+        "backgroundColor": {
+            "type": "string"
+        },
+        "fontFamily": {
+            "type": "string"
+        },
+        "fontWeight": {
+            "type": "string",
+            "default": "normal"
+        },
+        "marginTop": {
+            "type": "string",
+            "default": "0"
+        },
+        "marginBottom": {
+            "type": "string",
+            "default": "0"
+        },
+        "borderWidth": {
+            "type": "string",
+            "default": "0"
+        },
+        "borderStyle": {
+            "type": "string",
+            "default": "none"
+        },
+        "borderColor": {
+            "type": "string"
+        },
+        "icon": {
+            "type": "string",
+            "default": "calendar"
+        },
+        "customIcon": {
+            "type": "string"
+        },
+        "iconPosition": {
+            "type": "string",
+            "default": "left"
+        }
+    },
+    "textdomain": "wc-estimated-delivery-date",
+    "editorScript": "file:./build/index.js",
+    "editorStyle": "file:./build/index.css",
+    "style": "file:./build/style-index.css"
+}

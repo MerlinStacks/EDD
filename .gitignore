@@ -1,53 +1,56 @@
-# Operating System Files
-.DS_Store
-Thumbs.db
-
-# IDE Files
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
-.cursor/
-
 # Dependencies
-/node_modules/
-/blocks/node_modules/
-/vendor/
-package-lock.json
-blocks/package-lock.json
-composer.lock
+/node_modules
+/vendor
 
-# Build Files
-/blocks/build/*.map
-/blocks/build/*.asset.php
-
-# Temporary Files
-*.log
-*.tmp
-*.temp
-.cache/
-
-# WordPress
-*.pot
-*.po
-*.mo
-*.zip
-*.tar.gz
-
-# Testing
-/phpunit.xml
-/tests/coverage/
-.phpunit.result.cache
+# Build files
+/build
+*.map
+*.asset.php
 
 # Environment
 .env
 .env.*
 !.env.example
 
-# Misc
-*.bak
+# Operating System
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
 *.swp
 *.swo
-.sass-cache/
-*.css.map
-*.js.map 
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# WordPress/WooCommerce specific
+wp-config.php
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/mu-plugins/
+wp-content/wp-cache-config.php
+wp-content/plugins/hello.php
+
+# Testing
+/phpunit.xml
+/tests/coverage/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.zip
+*.tar.gz
