@@ -4,6 +4,47 @@ All notable changes to the ED Dates CK plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Refactored plugin file structure to align with the provided specification.
+- Renamed main plugin file to `woocommerce-estimated-delivery-date.php`.
+- Created `admin`, `partials`, `languages`, `js`, `src`, `build` directories.
+- Moved block source/build files and assets to specified locations.
+- Renamed PHP classes, constants, and asset handles using `wc_edd_` prefix.
+- Updated `require_once` paths and class initializations.
+- Removed redundant files (`ed-dates-ck.php`, `blocks/`, old admin class).
+- Recreated build configuration files (`package.json`, `webpack.config.js`) at the root.
+
+## [1.0.17] - 2024-03-18
+### Fixed
+- Moved delivery lead time fields to the shipping tab and ensured they save correctly.
+
+## [1.0.16] - 2024-03-18
+### Added
+- New step-by-step shipping methods configuration interface in the admin panel.
+- Dynamic loading of shipping methods based on zone selection.
+- AJAX-based saving of shipping method settings.
+
+### Changed
+- Updated block registration to use `register_block_type` with `'ed-dates-ck/estimated-delivery'` as the name.
+- Refactored block rendering to use attributes and inline styles.
+- Improved delivery date calculation to use maximum transit time for single date display.
+- Updated `get_transit_times` method to retrieve transit times from all available shipping methods.
+- Renamed AJAX handlers in `class-ed-dates-ck-admin.php`.
+- Updated admin interface to use a step-by-step layout for shipping method configuration.
+- Improved error handling in `class-ed-dates-ck-calculator.php`.
+
+### Fixed
+- Removed duplicate hook for displaying estimated delivery on the product page (now handled by the block).
+
+## [1.0.15] - 2024-03-18
+### Fixed
+- Fixed PHP Fatal error in delivery date calculation by implementing proper transit time handling
+- Added proper error handling for delivery date calculations
+- Improved shipping method transit time calculations with min/max values
+- Added fallback to default transit times when no shipping methods are configured
+
 ## [1.0.14] - 2024-03-18
 ### Fixed
 - PHP Fatal error due to undefined constant ED_DATES_CK_URL in admin class
@@ -195,4 +236,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shipping method transit times
 - Order cutoff time settings
 - Product page integration
-- Cart and checkout page integration 
+- Cart and checkout page integration

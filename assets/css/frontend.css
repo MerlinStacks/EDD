@@ -140,4 +140,73 @@
     .rtl .ed-dates-ck-cart-delivery {
         border-right-color: #63b3ed;
     }
+}
+
+/* Delivery Block Styles */
+.ed-dates-ck-delivery-block {
+    margin: 1em 0;
+    padding: 1em;
+    background-color: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #4299e1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.ed-dates-ck-delivery-block .ed-dates-ck-icon {
+    color: #4299e1;
+    font-size: 1.5em;
+}
+
+.ed-dates-ck-delivery-block .ed-dates-ck-content {
+    flex: 1;
+}
+
+.ed-dates-ck-delivery-block h3 {
+    margin: 0 0 0.25em 0;
+    font-size: 1em;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.ed-dates-ck-delivery-block .delivery-date {
+    margin: 0;
+    font-size: 1.1em;
+    color: #4a5568;
+}
+
+/* Cart and Checkout Styles */
+.ed-dates-ck-cart-delivery,
+.ed-dates-ck-checkout-delivery {
+    margin: 0.5em 0;
+    padding: 0.5em 0.75em;
+    background-color: transparent;
+    border-left: 3px solid #4299e1;
+    font-size: 0.9em;
+}
+
+.ed-dates-ck-cart-delivery .label,
+.ed-dates-ck-checkout-delivery .label {
+    font-weight: 600;
+    margin-right: 0.5em;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .ed-dates-ck-delivery-block {
+        background-color: rgba(45, 55, 72, 0.1);
+        border-color: rgba(226, 232, 240, 0.1);
+        border-left-color: #63b3ed;
+    }
+
+    .ed-dates-ck-delivery-block h3,
+    .ed-dates-ck-delivery-block .delivery-date {
+        color: #e2e8f0;
+    }
+
+    .ed-dates-ck-delivery-block .ed-dates-ck-icon {
+        color: #63b3ed;
+    }
 } 

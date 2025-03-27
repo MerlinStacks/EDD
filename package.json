@@ -1,0 +1,27 @@
+{
+  "name": "woocommerce-estimated-delivery-date",
+  "version": "1.0.16",
+  "description": "Displays an estimated delivery date on WooCommerce product pages using a Gutenberg block.",
+  "author": "CustomKings",
+  "license": "GPL-2.0-or-later",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "wp-scripts build src/index.js --output-path=build",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "start": "wp-scripts start src/index.js --output-path=build",
+    "makepot": "wp i18n make-pot . languages/wc-estimated-delivery-date.pot --exclude=node_modules,vendor,build"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^27.0.0" 
+  },
+  "dependencies": {
+    "@wordpress/blocks": "^12.24.0",
+    "@wordpress/components": "^25.13.0",
+    "@wordpress/element": "^5.24.0",
+    "@wordpress/i18n": "^4.47.0"
+  }
+}

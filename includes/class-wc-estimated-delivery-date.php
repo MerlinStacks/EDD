@@ -3,18 +3,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class ED_Dates_CK {
+class WC_Estimated_Delivery_Date { // Renamed class
     /**
-     * @var ED_Dates_CK The single instance of the class
+     * @var WC_Estimated_Delivery_Date The single instance of the class // Updated type hint
      */
     protected static $_instance = null;
 
     /**
-     * Main ED_Dates_CK Instance
+     * Main WC_Estimated_Delivery_Date Instance // Updated class name
      */
-    public static function get_instance() {
+    public static function get_instance() { // Updated class name
         if (is_null(self::$_instance)) {
-            self::$_instance = new self();
+            self::$_instance = new self(); // Updated class name
         }
         return self::$_instance;
     }
@@ -33,9 +33,6 @@ class ED_Dates_CK {
         // Add frontend hooks
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         
-        // Add estimated delivery date to product page
-        add_action('woocommerce_before_add_to_cart_form', array($this, 'display_product_delivery_date'), 15);
-        
         // Add estimated delivery date to cart
         add_action('woocommerce_after_cart_item_name', array($this, 'display_cart_delivery_date'), 10, 2);
         
@@ -51,59 +48,28 @@ class ED_Dates_CK {
      */
     public function enqueue_scripts() {
         wp_enqueue_style(
-            'ed-dates-ck-frontend',
-            ED_DATES_CK_PLUGIN_URL . 'assets/css/frontend.css',
+            'wc-edd-frontend', // Updated handle
+            WC_EDD_PLUGIN_URL . 'assets/css/frontend.css', // Updated constant
             array(),
-            ED_DATES_CK_VERSION
+            WC_EDD_VERSION // Updated constant
         );
 
         wp_enqueue_script(
-            'ed-dates-ck-frontend',
-            ED_DATES_CK_PLUGIN_URL . 'assets/js/frontend.js',
+            'wc-edd-frontend', // Updated handle
+            WC_EDD_PLUGIN_URL . 'assets/js/frontend.js', // Updated constant, TODO: Rename JS file?
             array('jquery'),
-            ED_DATES_CK_VERSION,
+            WC_EDD_VERSION, // Updated constant
             true
         );
 
-        wp_localize_script('ed-dates-ck-frontend', 'edDatesCK', array(
+        // TODO: Update nonce action, object name, and potentially i18n strings
+        wp_localize_script('wc-edd-frontend', 'wcEddData', array( // Updated handle & object name
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('ed_dates_ck_nonce'),
+            'nonce' => wp_create_nonce('wc_edd_frontend_nonce'), // Updated nonce action
             'i18n' => array(
-                'estimatedDelivery' => __('Estimated Delivery:', 'ed-dates-ck')
+                'estimatedDelivery' => __('Estimated Delivery:', 'wc-estimated-delivery-date') // Updated text domain
             )
         ));
-    }
-
-    /**
-     * Display delivery date on product page
-     */
-    public function display_product_delivery_date() {
-        try {
-            global $product;
-            
-            if (!$product || !($product instanceof WC_Product)) {
-                return;
-            }
-
-            $calculator = ED_Dates_CK_Calculator::get_instance();
-            if (!$calculator) {
-                return;
-            }
-
-            $delivery_date = $calculator->calculate_estimated_delivery($product->get_id());
-            if (!$delivery_date) {
-                return;
-            }
-
-            ?>
-            <div class="ed-dates-ck-product-delivery">
-                <h4><?php echo esc_html__('Estimated Delivery', 'ed-dates-ck'); ?></h4>
-                <p class="delivery-date"><?php echo esc_html($delivery_date); ?></p>
-            </div>
-            <?php
-        } catch (Exception $e) {
-            error_log('ED Dates CK - Error displaying product delivery date: ' . $e->getMessage());
-        }
     }
 
     /**
